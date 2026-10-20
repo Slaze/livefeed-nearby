@@ -43,9 +43,9 @@ Transports: BLE GATT (default), Classic RFCOMM, experimental LE L2CAP CoC. Disco
 
 **How verified.** `:app:assembleGithubDebug` SUCCESS, applicationId `com.livefeed.nearby`, APK SHA-256 `a755a03ad1e450cda0b84759f825387d71f11ebf0c442c632f7fe2a476171006`. `:app:testGithubDebugUnitTest` BUILD SUCCESSFUL after policy JSON export. `python3 -B -m unittest tools.tests.test_make_release tools.tests.test_fdroid_recipe` 33 OK. Host pytest module not installed on this Python.
 
-**Next.** Create `Slaze/livefeed-nearby` before shipping updates. Cut a Nearby signing cert and replace `AppSharePolicy.PUBLISHED_RELEASE_CERT_SHA256`. Phone check of LiveFeed → Nearby.
+**Next.** Cut a Nearby signing cert and replace `AppSharePolicy.PUBLISHED_RELEASE_CERT_SHA256`. Phone check of LiveFeed → Nearby. Merge `nearby` into `Slaze/meshlive-android` main if that fork’s default branch should match.
 
-**Blockers.** No GitHub release yet. Money MIT unchanged (Lokator + Nairacoin).
+**Blockers.** No GitHub release APK yet. Money MIT unchanged (Lokator + Nairacoin).
 
 ### 2026-10-20 — LiveFeed Nearby sidecar
 
