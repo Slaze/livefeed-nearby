@@ -1,6 +1,6 @@
-# MeshLive architecture
+# Nearby architecture
 
-For developers and curious readers: how MeshLive is put together (modules, radio links, sender and receiver pipelines, relay chains, calls, identity at a high level, distribution) and a summary of the experimental switches. Wire formats and security rules are in [PROTOCOL.md](PROTOCOL.md); testing is in [TESTING.md](TESTING.md); unfinished work is in [PLAN.md](PLAN.md).
+For developers and curious readers: how Nearby is put together (modules, radio links, sender and receiver pipelines, relay chains, calls, identity at a high level, distribution) and a summary of the experimental switches. Wire formats and security rules are in [PROTOCOL.md](PROTOCOL.md); testing is in [TESTING.md](TESTING.md); unfinished work is in [PLAN.md](PLAN.md).
 
 Some words used throughout:
 
@@ -15,7 +15,7 @@ Some words used throughout:
 | RFCOMM | Bluetooth Classic's serial-port style byte stream. |
 | LE | Bluetooth Low Energy. |
 | L2CAP CoC | LE "connection-oriented channel": a byte stream over LE with its own flow control (a credit-based L2CAP channel). |
-| GATT | The LE attribute protocol. MeshLive builds a bounded byte stream out of GATT writes and notifications when CoC is not available or wanted. |
+| GATT | The LE attribute protocol. Nearby builds a bounded byte stream out of GATT writes and notifications when CoC is not available or wanted. |
 | Bounded media age | An experimental policy that limits how old video may become by degrading it (lower rate, skipped frames, audio-only) instead of letting delay grow without limit. The default is "no frame loss": delay grows and playout absorbs it. |
 
 ## The big picture
@@ -49,11 +49,11 @@ Some words used throughout:
 ## Where the code is
 
 Everything under `app/src/main/java/com/example/bluetoothtest/` (the Kotlin package keeps its original name; the
-product is MeshLive). Native code is in `app/src/main/cpp/`.
+product is Nearby). Native code is in `app/src/main/cpp/`.
 
 | Area | Main files | What they do |
 | --- | --- | --- |
-| Screens | `MainActivity`, `HomeUi`, `ContactActions`, `PeopleList`, `SettingsUi`, `StatusIndicator`, `CallScreenUi`, `CallScreenController`, `MessagesActivity`, `AboutActivity`, `OnboardingActivity`, `SupportUi`, `SecurityUi`, `VerifyContactActivity` | UI and session ownership. Sessions live with the activity, not a background service. |
+| Screens | `MainActivity`, `HomeUi`, `LiveFeedHostLaunch`, `ContactActions`, `PeopleList`, `SettingsUi`, `StatusIndicator`, `CallScreenUi`, `CallScreenController`, `MessagesActivity`, `AboutActivity`, `OnboardingActivity`, `SupportUi`, `SecurityUi`, `VerifyContactActivity` | UI and session ownership. Sessions live with the activity, not a background service. `LiveFeedHostLaunch` is the sidecar contract so LiveFeed can open this Nearby radio without merging identities. |
 | Discovery | `BleDiscoveryAdvertiser`, `BleL2capControl` (scanner and control server), `StreamDiscovery`, `MeshControlMessages`, `CompactDiscoveryAnnouncement`, `RotatingDiscovery`, `TitleAdvertiser`, `StableAdvertisingSet`, `PeerAddressBook`, `PeopleList` | The 22-byte announcement, scanning with a start quota and failure recovery, and the "People nearby" and "Nearby broadcasts" lists. |
 | Transports | `ClassicConnector`, `ClassicTransport`, `ClassicPeerConnection`, `BleCocClient`, `CocListenerHub`, `CocSocketOutput`, `GattVideoTransport`, `AdaptivePhy`, `BlePhyPreference`, `LeConnectionPriorityKeeper`, `GattClientTeardown`, `BluetoothTransportPolicy` | The three media transports, PHY and connection-parameter handling, and stack-bug workarounds. |
 | Security | `SecureBluetoothLink`, `EndToEndVideoSecurity`, `ForwardedStreamSecurity`, `GroupBroadcastSecurity`, `AndroidNodeIdentityStore`, `IdentityVerification`, `EmergencyWipe`, `NotificationPrivacy` | Handshakes, record sealing, identity, verified contacts and the wipe. |
@@ -83,6 +83,8 @@ Outside the Android app:
 The look is "Plain Signal": black ground, Manrope (four bundled weights), Material Symbols Rounded icons, white
 primary actions, red only for live, hang up and decline, green only for answer and the verified check, plain rows
 instead of cards. The tokens are in `res/values/colors.xml` and `themes.xml`.
+
+LiveFeed may start this Nearby radio as a **sidecar** (a second installed APK), not as a library inside LiveFeed's process. The intent action is `com.livefeed.action.NEARBY`; optional extra `com.livefeed.extra.OPEN_SCREEN` is `live`, `calls` or `contacts`. Host extras are not benchmark extras and do not skip onboarding. Rotating radio IDs stay out of LiveFeed accounts. Compiling this module into the LiveFeed APK is unfinished (see [PLAN.md](PLAN.md)) and would GPL that combined binary.
 
 `MainActivity` owns every screen as a sibling view and a bottom navigation (`mainNav`) shown on the four tab
 screens only: Live, Calls, Contacts, Settings. Live is the stream browser itself (`AppScreen.RECEIVER_BROWSER`): it is
@@ -119,7 +121,7 @@ never an ID.
 
 ## Transports
 
-MeshLive carries media over one of three Bluetooth transports. The user picks one in Settings; the app never
+Nearby carries media over one of three Bluetooth transports. The user picks one in Settings; the app never
 silently swaps it for another (the one exception is the experimental automatic GATT fallback in the register).
 
 | Transport | Default? | Pairing | Notes |
@@ -257,7 +259,7 @@ Bluetooth transport -> BMS1 open -> BME1 open -> BTV3 parse
 
 ## Relay chains and mesh
 
-MeshLive is a tree of hop-local relationships, not a routed network.
+Nearby is a tree of hop-local relationships, not a routed network.
 
 - **One parent, direct children.** A viewer has one parent. A forwarding viewer offers **one** downstream child. A
   source may accept several direct viewers within its measured link budget. Each phone acts only on its parent and
@@ -419,7 +421,7 @@ listener: reader verifies the source's signatures -> OpusAudioDecoder (RADIO clo
 
 ## Offline app sharing
 
-MeshLive can hand its own APK to a nearby phone when there is no internet (a pattern also used by Briar and
+Nearby can hand its own APK to a nearby phone when there is no internet (a pattern also used by Briar and
 Bitchat, re-implemented from a description, with no code copied).
 
 - **Share sheet.** `AppShare` copies the installed base APK to a private cache directory and offers it through the
@@ -435,7 +437,7 @@ Bitchat, re-implemented from a description, with no code copied).
 ## Device-family policy registry
 
 Phones differ in SoC, Bluetooth stack version, vendor skin and codec components, and many "it works on my phone"
-problems are stack bugs. MeshLive keeps every phone-family specific decision in one registry
+problems are stack bugs. Nearby keeps every phone-family specific decision in one registry
 (`DevicePolicyRegistry.entries`, built from `DevicePolicyRegistry.kt` plus the per-area files `CodecPolicy`,
 `YuvPolicy`, `BluetoothTransportPolicy`, `BackgroundPolicy`, `MemoryThermalPolicy`, `NativeCompat`, `ScanPolicy`,
 `ServiceFamilyPolicy`, `AudioPolicyEntries`, `CocPolicy`, `CameraPolicy`, `AdvertisingPolicy` and `PhyLinkPolicy`). Code that
@@ -542,9 +544,9 @@ For maintainers and packagers. Users: see [Install, update and verify](USER_GUID
 - **Flavours.** `github` is the release page's build (`tools/make_release.py` runs `:app:assembleGithubRelease`; the in-app updater and its install permission live only there); `fdroid` is the F-Droid recipe's (`gradle: [fdroid]`, outputs `app-fdroid-<abi>-release-unsigned.apk`). Both carry the "newer version nearby" note. The APK of one source cannot update the other: F-Droid signs its own build, and the in-app updater is offered only to a copy that carries the release key. Neither flavour embeds a build time, so reproducibility is unchanged (`tools/check_reproducible_build.py` defaults to `:app:assembleFdroidRelease`).
 - **Deterministic version.** `versionName`/`versionCode` are literals (no date or git hash). The APK carries no Google dependency-info block (`dependenciesInfo` off). **Reproducible builds.** `python -B tools/check_reproducible_build.py build --tree-a DIR_A --tree-b DIR_B -- -PsplitAbis=true -PenableArmeabiV7a=true -PuniversalApk=false` builds the unsigned release (release key never read; build cache off; sequential; refuses to start when memory use is high) in two clean checkouts at different paths and compares every APK entry; `compare A.apk B.apk` compares two existing APKs ignoring the META-INF signature files, as F-Droid does. Result 2026-10-11 (AGP 8.13.2, Gradle 8.13, JDK 21, Windows): both ABIs bit-identical in two checkouts at different paths. The first run differed only in `libbluetooth_video_native.so`, because libopus `__FILE__`/assert strings embedded the checkout path; `app/src/main/cpp/CMakeLists.txt` now maps the libopus, libaom, app-source and build directories with `-ffile-prefix-map`. Not yet verified: a Linux build (the F-Droid buildserver, JDK 17, Linux NDK) against a Windows build, and the signed APK; so F-Droid still signs its own build and `Binaries` stays commented out in the recipe. A release signed with our key must be re-checked with `compare` against the F-Droid-built APK before enabling it.
 - **Making a release.** `python tools/make_release.py` (clean tree, signing key present, fingerprint must match) writes `release/<versionName>-<versionCode>/`: the signed APKs, `SHA256SUMS`, `signing-cert.sha256`, `apksigner-certs.txt`, `SOURCE-MANIFEST.txt` and a `RELEASE-NOTES.md` template to finish by hand. Nothing is uploaded. The checklist is in [TESTING.md](TESTING.md) under "Release checklist".
-- **Application ID.** The app name is MeshLive and the application ID is `io.github.meshlive.app` (the draft
-  F-Droid metadata is `distribution/fdroid/io.github.meshlive.app.yml`). The benchmark harness uses the same ID;
-  set `MESHLIVE_APP_ID` to drive a build with another ID. The Kotlin package, `namespace`, proguard rules and the
+- **Application ID.** The app name is Nearby and the application ID is `com.livefeed.nearby` (the draft
+  F-Droid metadata is `distribution/fdroid/com.livefeed.nearby.yml`). The benchmark harness uses the same ID;
+  set `NEARBY_APP_ID` to drive a build with another ID. The Kotlin package, `namespace`, proguard rules and the
   FileProvider authority (`${applicationId}`) need no change; `-PappId=<id>` builds a trial APK with another ID. A
   new ID is a different app to Android: installs of the old ID are not updated, and the signing key stays the same.
   For a later name change edit `app_name` in `app/src/main/res/values/strings.xml`, `RELEASE_BASENAME` in
@@ -594,8 +596,8 @@ Example start: `app.version: 1.0`, `app.build: 1`, `device.model: SM-S901B`, `de
 Extra notes for the build steps in the [README](../README.md#build-from-source).
 
 - **Flavours.** Two distribution flavours (`app/build.gradle.kts` `productFlavors`): `github` (what the release page ships, with the opt-in updater and `REQUEST_INSTALL_PACKAGES`) and `fdroid` (what the F-Droid recipe builds; no updater, no install permission). Name the flavour in build tasks: `:app:assembleGithubDebug` (APK `app/build/outputs/apk/github/debug/app-github-debug.apk`, the one `tools/deploy_build.py` installs), `:app:assembleGithubRelease`, `:app:assembleFdroidRelease`. `:app:testDebugUnitTest` is an alias (AGP defines none once flavours exist): the github flavour's unit tests run once, and the fdroid flavour's main and test code must compile; one class: `:app:testGithubDebugUnitTest --tests <class>`. The plain `assembleDebug`/`assembleRelease` aggregates would compile the native libraries twice, so avoid them. `:app:processGithubReleaseManifest :app:processFdroidReleaseManifest` followed by `python -B -m pytest tools/tests/test_flavour_manifests.py` checks the merged manifests.
-- **Application ID.** `io.github.meshlive.app`. The Kotlin package and `namespace` stay `com.example.bluetoothtest`,
-  so launch components are `io.github.meshlive.app/com.example.bluetoothtest.MainActivity`. See
+- **Application ID.** `com.livefeed.nearby`. The Kotlin package and `namespace` stay `com.example.bluetoothtest`,
+  so launch components are `com.livefeed.nearby/com.example.bluetoothtest.MainActivity`. See
   "Distribution and releases" above.
 - **Pinned toolchain.** The Gradle wrapper checks `distributionSha256Sum` against every Gradle download.
   `gradle/verification-metadata.xml` holds the SHA-256 of every plugin and dependency artifact and Gradle fails a build

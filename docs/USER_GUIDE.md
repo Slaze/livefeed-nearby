@@ -1,38 +1,38 @@
 # User guide
 
-For people who use MeshLive: how to install, update and verify it, what it can do, how to use it, and common questions. Privacy is covered in [PRIVACY.md](PRIVACY.md).
+For people who use Nearby: how to install, update and verify it, what it can do, how to use it, and common questions. Privacy is covered in [PRIVACY.md](PRIVACY.md).
 
 ## Install, update and verify
 
-The three-step install is in the [README](../README.md#install). This section covers other ways to install and update, the file list, and how to check a download.
+The three-step install is in the [README](../README.md#install). Until a Nearby GitHub release exists, sideload the APK you built. This section covers other ways to install and update once releases are published, the file list, and how to check a download.
 
 ### Other ways to install and update
 
 #### Get updates automatically
  install [Obtainium](https://github.com/ImranR98/Obtainium), then tap
-**[Get it on Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/MeshLive/meshlive-android)** (or add `https://github.com/MeshLive/meshlive-android` in Obtainium by hand).
-Obtainium checks the releases page for new versions and updates MeshLive for you.
+**[Get it on Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/Slaze/livefeed-nearby)** (or add `https://github.com/Slaze/livefeed-nearby` in Obtainium by hand).
+Obtainium checks the releases page for new versions and updates Nearby for you.
 
 #### Updates inside the app (release-page builds)
- MeshLive can check for a newer version itself, but only after you say yes: the first time you open it, it asks "Check for updates when online?". Until you answer yes it makes no internet request at all. With yes it asks GitHub's release API (`api.github.com`) at most once a day while you are online; GitHub sees your phone's internet address and that you asked about MeshLive, and nothing else is sent (no account, no cookie, no device or version information, no tracker). It downloads nothing until you tap, and it installs a file only if all of these hold: it is signed with the MeshLive release key that is built into the app (the fingerprint under "Verifying a release" below), it is newer than your copy, it is for your phone type, and its SHA-256 equals the one the release publishes. Android then asks you to confirm; nothing is ever installed silently or downgraded. Settings > Check for updates changes your answer (a "yes" restored from a backup onto another phone is dropped and asked again: the answer has a marker in the no-backup folder). While it is off, nothing on the Updates screen can contact GitHub. F-Droid builds contain none of this (F-Droid updates them) and do not ask for the install permission.
+ Nearby can check for a newer version itself, but only after you say yes: the first time you open it, it asks "Check for updates when online?". Until you answer yes it makes no internet request at all. With yes it asks GitHub's release API (`api.github.com`) at most once a day while you are online; GitHub sees your phone's internet address and that you asked about Nearby, and nothing else is sent (no account, no cookie, no device or version information, no tracker). It downloads nothing until you tap, and it installs a file only if all of these hold: it is signed with the Nearby release key that is built into the app (the fingerprint under "Verifying a release" below), it is newer than your copy, it is for your phone type, and its SHA-256 equals the one the release publishes. Android then asks you to confirm; nothing is ever installed silently or downgraded. Settings > Check for updates changes your answer (a "yes" restored from a backup onto another phone is dropped and asked again: the answer has a marker in the no-backup folder). While it is off, nothing on the Updates screen can contact GitHub. F-Droid builds contain none of this (F-Droid updates them) and do not ask for the install permission.
 
 #### A friend has a newer version
- When two phones connect, each tells the other which MeshLive release it runs (in the signed greeting phones already exchange; never in what a phone broadcasts). If a phone this phone connected to (a call, a stream or a relay you started; a stranger who connects to you is not counted) says it runs a newer release you see a quiet note on the home screen. It is only that phone's claim: nothing is downloaded or checked until you pick a file yourself. It explains how to get the file from that phone (Settings > About and updates > Share this app on its screen, or any other way you like), and **Choose the file** checks it the same way before offering to install it. Settings > Tell me about newer versions nearby turns this off, in both directions.
+ When two phones connect, each tells the other which Nearby release it runs (in the signed greeting phones already exchange; never in what a phone broadcasts). If a phone this phone connected to (a call, a stream or a relay you started; a stranger who connects to you is not counted) says it runs a newer release you see a quiet note on the home screen. It is only that phone's claim: nothing is downloaded or checked until you pick a file yourself. It explains how to get the file from that phone (Settings > About and updates > Share this app on its screen, or any other way you like), and **Choose the file** checks it the same way before offering to install it. Settings > Tell me about newer versions nearby turns this off, in both directions.
 
 #### No internet at all
 
-A friend who already has MeshLive can send it to you: in MeshLive's **Help**, they tap **Share this app** and send it with Quick Share, Nearby Share or Bluetooth. The share screen shows the APK hash and the signing-certificate hash, so you can compare them with the release page. An experimental "Share app nearby" screen serves the file over a local Wi-Fi Direct link instead.
+A friend who already has Nearby can send it to you: in Nearby's **Help**, they tap **Share this app** and send it with Quick Share, Nearby Share or Bluetooth. The share screen shows the APK hash and the signing-certificate hash, so you can compare them with the release page. An experimental "Share app nearby" screen serves the file over a local Wi-Fi Direct link instead.
 
 #### Other files
 
-On the [releases page](https://github.com/MeshLive/meshlive-android/releases): MeshLive is an
+On the [releases page](https://github.com/Slaze/livefeed-nearby/releases): Nearby is an
 unofficial open-source build (GPL-3.0-or-later), signed with the project's own key, and not on Google Play. Each
-release has one APK per CPU type (`MeshLive-<version>-<abi>.apk`); `MeshLive.apk` is the same file as the
+release has one APK per CPU type (`Nearby-<version>-<abi>.apk`); `Nearby.apk` is the same file as the
 arm64-v8a one.
 
 | File | Use it on |
 | --- | --- |
-| `MeshLive.apk` or `...-arm64-v8a.apk` | Almost every phone since about 2016. **Pick this if unsure.** |
+| `Nearby.apk` or `...-arm64-v8a.apk` | Almost every phone since about 2016. **Pick this if unsure.** |
 | `...-armeabi-v7a.apk` | Older or 32-bit-only ARM phones (some Android Go models). |
 | `...-universal.apk` | Both in one larger file, for when you do not know. |
 
@@ -50,8 +50,8 @@ source it was built from. Signing happens only on the maintainer's machine: CI
 Quick check with the [GitHub CLI](https://cli.github.com/) (replace the file name with the one you downloaded):
 
 ```bash
-gh attestation verify MeshLive-<version>-universal.apk --repo MeshLive/meshlive-android
-gh attestation verify SOURCE-MANIFEST.txt --repo MeshLive/meshlive-android
+gh attestation verify Nearby-<version>-universal.apk --repo Slaze/livefeed-nearby
+gh attestation verify SOURCE-MANIFEST.txt --repo Slaze/livefeed-nearby
 ```
 
 A passing result says this repository's `Release attestation` workflow recorded that exact file digest for a tagged
@@ -67,9 +67,9 @@ Signing certificate SHA-256 (also in each release's notes and `signing-cert.sha2
    `Signer #1 certificate SHA-256 digest` equal to the fingerprint above, with no other signer. The app's About screen
    shows the same fingerprint for the installed copy (a fuller in-app release check is planned; see [PLAN.md](PLAN.md)). A different fingerprint means a different publisher: do not install it.
 2. **APK digest.** `sha256sum -c SHA256SUMS --ignore-missing` against the `SHA256SUMS` file of the release.
-3. **Source manifest attestation.** `gh attestation verify SOURCE-MANIFEST.txt --repo MeshLive/meshlive-android`
+3. **Source manifest attestation.** `gh attestation verify SOURCE-MANIFEST.txt --repo Slaze/livefeed-nearby`
    confirms the manifest was produced by this repository's workflow. If the APK was uploaded before publishing,
-   `gh attestation verify MeshLive-<version>-<abi>.apk --repo MeshLive/meshlive-android` confirms the same digest was
+   `gh attestation verify Nearby-<version>-<abi>.apk --repo Slaze/livefeed-nearby` confirms the same digest was
    recorded. The attestation is a record of the digest; trust in the APK itself still comes from step 1.
 4. **Source.** `SOURCE-MANIFEST.txt` lists the git commit, tree hash and the SHA-256 of every tracked file. Clone,
    `git checkout <commit>`, then `python tools/make_release.py --manifest-only --output mine.txt` and
@@ -134,7 +134,7 @@ enable Bluetooth.
   itself looks stuck ("turn Bluetooth off and on"). A healthy phone shows "No background limits found".
 - **Android 10 and 11: turn Location on.** On those versions Android finds nearby phones over Bluetooth only while the
   phone's Location switch is on, and delivers results in the background only through a notification of type "location".
-  MeshLive never reads or stores where you are; if Location is off, Settings says so and the status points to the switch.
+  Nearby never reads or stores where you are; if Location is off, Settings says so and the status points to the switch.
 - **Video quality: Auto.** Auto chooses the picture size, frame rate and bitrate from how much the Bluetooth
   link to the other phone can carry, starting at 360p for a typical link, and moves up or down while you stream
   or talk; on a very weak link it keeps the audio and drops the video. (Experimental: the measured Auto ladder
@@ -152,12 +152,12 @@ enable Bluetooth.
   or Audio only (the last choice is remembered). Audio only has no camera: add an optional title, pick Voice, Low data
   or Music, tap Start, and watch the level meter and the listener count. Mute keeps the microphone open and sends
   silence, so Android's microphone indicator stays on; Pause stops the microphone; End stops the broadcast. The
-  first time, the app tells you that anyone nearby with MeshLive can listen, including phones that pass it on, and
+  first time, the app tells you that anyone in range who has this app can listen, including phones that pass it on, and
   that listeners can tell it is your phone. A reminder appears after 30 minutes without a listener or two hours on the
   air, and the broadcast stops five minutes after an unanswered reminder. Listeners see the broadcast under Live with a
   radio icon and "Audio only"; tapping it opens a listening screen (title, route, state, level meter, Mute, Stop,
   Block this person) that keeps playing with the screen off. The volume is your phone's media volume; the app never
-  changes it. An older MeshLive shows the row as not supported.
+  changes it. An older Nearby shows the row as not supported.
 - **Receive and forward.** Saved sender settings stay independent from reception. Settings "Relay video for
   others" decides, at each join, whether a viewer offers one downstream child. It is on by default
   for normal launches and pauses itself at that join below 20% battery (when not charging) or in Battery Saver.
@@ -237,7 +237,7 @@ Location is on, even though no location is used. Details: [PRIVACY.md](PRIVACY.m
 
 **Which phones were tested?** The seven reference phones in [DEVICES.md](DEVICES.md): Samsung S24, S22, A55 and M31, a
 Redmi (Xiaomi), an ASUS and an OPPO A15s, running Android 10 to 16. Other phones may work or may hit Bluetooth-stack
-bugs. Please send results with the [device test report](https://github.com/MeshLive/meshlive-android/issues/new?template=device-report.yml) form and, if you can, an Export diagnostics block.
+bugs. Please send results with the [device test report](https://github.com/Slaze/livefeed-nearby/issues/new?template=device-report.yml) form and, if you can, an Export diagnostics block.
 
 **Why is GATT the default? Why does Classic ask me to pair?** LE GATT works on the most phones without pairing, but it
 is the slowest. Classic has the highest throughput but needs a one-time mutual pairing (an experimental option removes

@@ -1,6 +1,6 @@
 # Device compatibility
 
-For users and testers: which phones MeshLive has been tested on, and how it went. The app needs Android 10 or newer.
+For users and testers: which phones this radio has been tested on (upstream MeshLive runs; same protocol). The app needs Android 10 or newer.
 
 ## Reference phones
 
@@ -16,11 +16,11 @@ The maintainers test on these phones, by alias:
 | ASUS | ASUS_I01WD | 11 |
 | A15s | OPPO CPH2179 | 10 |
 
-An iPhone client is being developed in a sibling repository, `MeshLive/meshlive-ios`.
+An iPhone client is being developed upstream in `MeshLive/meshlive-ios`.
 
 ## Results
 
-**Please add your phone.** Fill in the [device test report](https://github.com/MeshLive/meshlive-android/issues/new?template=device-report.yml)
+**Please add your phone.** Fill in the [device test report](https://github.com/Slaze/livefeed-nearby/issues/new?template=device-report.yml)
 (about two minutes) and we will add it to this table. Reports where everything worked are as useful as failures.
 
 How to read it: **pass** = met all of our quality and reliability checks; **partial** = it ran and carried audio or

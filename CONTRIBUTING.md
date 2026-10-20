@@ -1,4 +1,4 @@
-# Contributing to MeshLive
+# Contributing to Nearby
 
 For anyone who wants to report a bug, share a device result, improve the docs or send code. You do not need to write code to help: a clear bug report or a device compatibility result is a real contribution.
 
@@ -26,7 +26,7 @@ python tools/fetch_native_sources.py      # pinned libaom and libopus; not store
 python -B -m pytest -q tools              # host tool tests
 ```
 
-Gradle verifies every dependency against `gradle/verification-metadata.xml` and the lockfiles; if you change a dependency, update both together ([build notes](docs/ARCHITECTURE.md#build-notes)). The application ID is `io.github.meshlive.app` (the Kotlin package stays `com.example.bluetoothtest`); do not change it in a feature branch, because a new ID is a different app to Android.
+Gradle verifies every dependency against `gradle/verification-metadata.xml` and the lockfiles; if you change a dependency, update both together ([build notes](docs/ARCHITECTURE.md#build-notes)). The application ID is `com.livefeed.nearby` (the Kotlin package stays `com.example.bluetoothtest`); do not change it in a feature branch, because a new ID is a different app to Android.
 
 Streaming, Bluetooth and codec behaviour cannot be proven on an emulator. To test on your own phones, copy `tools/benchmark_devices.example.json` to `tools/benchmark_devices.json` (Git ignores it) and list your phones. Scope, acceptance gates and workflow are in [docs/TESTING.md](docs/TESTING.md). You do not need every reference phone; say which ones you used.
 
@@ -47,7 +47,7 @@ The full working rules for people and coding agents are in [AGENTS.md](AGENTS.md
 
 ## Using AI tools
 
-AI-assisted work is welcome and goes through the same review as any other change. Most of MeshLive was written with Anthropic's Claude under human direction, and critical changes also get a read-only second review by another model; a finding is a lead to verify, not an instruction.
+AI-assisted work is welcome and goes through the same review as any other change. Most of Nearby was written with Anthropic's Claude under human direction, and critical changes also get a read-only second review by another model; a finding is a lead to verify, not an instruction.
 
 - You are responsible for every line. Read, understand and run what the tool wrote.
 - Say in the pull request when AI did a substantial part (a sentence: which tool, for what).
@@ -58,7 +58,7 @@ AI-assisted work is welcome and goes through the same review as any other change
 
 ## Licensing and sign-off
 
-MeshLive is **GPL-3.0-or-later** ([LICENSE](LICENSE)); contributions are accepted under the same licence and you keep your copyright. Copyright lines read "The MeshLive Authors" ([AUTHORS](AUTHORS)). The test-video generator in `tools/video-stress-generator/` is MIT-licensed with its own licence file.
+Nearby is **GPL-3.0-or-later** ([LICENSE](LICENSE)); contributions are accepted under the same licence and you keep your copyright. Copyright lines read "The MeshLive Authors" ([AUTHORS](AUTHORS)). The test-video generator in `tools/video-stress-generator/` is MIT-licensed with its own licence file.
 
 - Sign off every commit with `git commit -s`; this certifies the [Developer Certificate of Origin 1.1](https://developercertificate.org/).
 - Do not copy code, assets, test media or protocol text from another project unless its licence is compatible. Keep the original notice and add the component to [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

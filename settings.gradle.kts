@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Bluetoothtest"
+rootProject.name = "Nearby"
 include(":app")
  

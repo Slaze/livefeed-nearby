@@ -90,7 +90,7 @@
                     android:layout_marginTop="8dp"
                     android:textAppearance="@style/TextAppearance.App.Body"
                     android:visibility="gone"
-                    tools:text="Signed by the MeshLive release key." />
+                    tools:text="Signed by the Nearby release key." />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/updatePrimaryButton"

@@ -245,7 +245,7 @@ internal object NameWindowNotification {
     const val CHANNEL_ID = "visible_by_name"
     private const val NOTIFICATION_ID = 1004
     private const val REQUEST_CODE = 4
-    const val ACTION_STOP = "io.github.meshlive.app.action.STOP_VISIBLE_BY_NAME"
+    const val ACTION_STOP = "com.livefeed.nearby.action.STOP_VISIBLE_BY_NAME"
 
     fun post(context: Context, name: String, endsAtWallMs: Long) {
         val manager = context.getSystemService(NotificationManager::class.java) ?: return
@@ -263,7 +263,7 @@ internal object NameWindowNotification {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stat_meshlive)
+            .setSmallIcon(R.drawable.ic_stat_nearby)
             .setContentTitle(context.getString(R.string.visible_name_notification_title))
             .setContentText(context.getString(R.string.visible_name_notification_text, name))
             .setOngoing(true)

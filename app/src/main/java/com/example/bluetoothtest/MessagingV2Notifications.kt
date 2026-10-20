@@ -175,7 +175,7 @@ internal object ConversationNotifier {
     private const val GROUP_KEY = "mv2_messages"
     private const val SUMMARY_ID = 1100
     private const val CHILD_ID = 1101
-    const val ACTION_MARK_READ = "io.github.meshlive.app.MV2_MARK_READ"
+    const val ACTION_MARK_READ = "com.livefeed.nearby.MV2_MARK_READ"
 
     /** Messages from an older app per peer (no read state of their own): counted until the thread is opened. */
     private val legacyUnread = ConcurrentHashMap<String, Int>()
@@ -287,12 +287,12 @@ internal object ConversationNotifier {
 
     private fun build(context: Context, content: NotificationContent, conversation: String, alert: Boolean): android.app.Notification {
         val publicVersion = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stat_meshlive)
+            .setSmallIcon(R.drawable.ic_stat_nearby)
             .setContentTitle(content.publicTitle)
             .setContentText(content.publicText)
             .build()
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stat_meshlive)
+            .setSmallIcon(R.drawable.ic_stat_nearby)
             .setContentTitle(content.title)
             .setContentText(content.text)
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
@@ -329,11 +329,11 @@ internal object ConversationNotifier {
         else AndroidThreadText(context).get("mv2_ui_notify_new_messages", total)
         val appTitle = context.getString(R.string.app_name)
         val publicVersion = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stat_meshlive).setContentTitle(appTitle).setContentText(generic).build()
+            .setSmallIcon(R.drawable.ic_stat_nearby).setContentTitle(appTitle).setContentText(generic).build()
         manager.notify(
             SUMMARY_ID,
             NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_stat_meshlive)
+                .setSmallIcon(R.drawable.ic_stat_nearby)
                 .setContentTitle(appTitle)
                 .setContentText(generic)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)

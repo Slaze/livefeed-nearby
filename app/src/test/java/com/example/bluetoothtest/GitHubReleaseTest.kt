@@ -51,11 +51,11 @@ class GitHubReleaseTest {
         assertEquals("v0.1.0-beta", release.tag)
         assertEquals("0.1.0-beta", release.versionName)
         assertEquals(ReleaseVersion.parse("0.1.0-beta"), release.version)
-        assertEquals("https://github.com/MeshLive/meshlive-android/releases/tag/v0.1.0-beta", release.pageUrl)
+        assertEquals("https://github.com/Slaze/livefeed-nearby/releases/tag/v0.1.0-beta", release.pageUrl)
         assertEquals(
             listOf(
-                "MeshLive-0.1.0-beta-arm64-v8a.apk", "MeshLive-0.1.0-beta-armeabi-v7a.apk",
-                "MeshLive-0.1.0-beta-universal.apk", "MeshLive.apk", "SHA256SUMS", "signing-cert.sha256", "SOURCE-MANIFEST.txt",
+                "Nearby-0.1.0-beta-arm64-v8a.apk", "Nearby-0.1.0-beta-armeabi-v7a.apk",
+                "Nearby-0.1.0-beta-universal.apk", "Nearby.apk", "SHA256SUMS", "signing-cert.sha256", "SOURCE-MANIFEST.txt",
             ),
             release.assets.map { it.name },
         )
@@ -68,11 +68,11 @@ class GitHubReleaseTest {
     @Test
     fun picksTheFileForThePhoneAndNeverTheStableAlias() {
         val release = GitHubReleases.parseLatest(fixture)
-        assertEquals("MeshLive-0.1.0-beta-armeabi-v7a.apk", GitHubReleases.selectApk(release, listOf("armeabi-v7a"))!!.name)
-        assertEquals("MeshLive-0.1.0-beta-universal.apk", GitHubReleases.selectApk(release, listOf("universal"))!!.name)
+        assertEquals("Nearby-0.1.0-beta-armeabi-v7a.apk", GitHubReleases.selectApk(release, listOf("armeabi-v7a"))!!.name)
+        assertEquals("Nearby-0.1.0-beta-universal.apk", GitHubReleases.selectApk(release, listOf("universal"))!!.name)
         assertEquals(
             "second choice is used only when the first is missing",
-            "MeshLive-0.1.0-beta-armeabi-v7a.apk",
+            "Nearby-0.1.0-beta-armeabi-v7a.apk",
             GitHubReleases.selectApk(release, listOf("x86_64", "armeabi-v7a"))!!.name,
         )
         assertNull(GitHubReleases.selectApk(release, listOf("x86_64")))
@@ -91,7 +91,7 @@ class GitHubReleaseTest {
     fun theApiDigestAndTheSumsFileAgreeOnTheRealRelease() {
         val release = GitHubReleases.parseLatest(fixture)
         val sums = GitHubReleases.parseSums(resource("github-SHA256SUMS-v0.1.0-beta.txt"))
-        for (asset in release.assets.filter { it.name.endsWith(".apk") && it.name != "MeshLive.apk" }) {
+        for (asset in release.assets.filter { it.name.endsWith(".apk") && it.name != "Nearby.apk" }) {
             assertEquals(asset.name, asset.sha256, sums[asset.name])
             assertEquals(asset.sha256, GitHubReleases.expectedSha256(asset, sums))
         }
@@ -144,11 +144,11 @@ class GitHubReleaseTest {
     fun dropsAssetsWhoseUrlLeavesThisRepositoryOrWhoseNameIsUnsafe() {
         val evil = withEdit {
             it.replace(
-                "https://github.com/MeshLive/meshlive-android/releases/download/v0.1.0-beta/MeshLive-0.1.0-beta-arm64-v8a.apk",
-                "https://github.com/attacker/other/releases/download/v0.1.0-beta/MeshLive-0.1.0-beta-arm64-v8a.apk",
+                "https://github.com/Slaze/livefeed-nearby/releases/download/v0.1.0-beta/Nearby-0.1.0-beta-arm64-v8a.apk",
+                "https://github.com/attacker/other/releases/download/v0.1.0-beta/Nearby-0.1.0-beta-arm64-v8a.apk",
             ).replace(
-                "\"name\": \"MeshLive-0.1.0-beta-armeabi-v7a.apk\"",
-                "\"name\": \"../MeshLive-0.1.0-beta-armeabi-v7a.apk\"",
+                "\"name\": \"Nearby-0.1.0-beta-armeabi-v7a.apk\"",
+                "\"name\": \"../Nearby-0.1.0-beta-armeabi-v7a.apk\"",
             )
         }
         val release = GitHubReleases.parseLatest(evil)
@@ -159,18 +159,18 @@ class GitHubReleaseTest {
 
     @Test
     fun onlyThisRepositorysReleaseDownloadsAreAssetUrls() {
-        val base = "https://github.com/MeshLive/meshlive-android/releases/download/v1.0.0/"
-        assertTrue(UpdateEndpoints.isReleaseAssetUrl(base + "MeshLive-1.0.0-arm64-v8a.apk"))
+        val base = "https://github.com/Slaze/livefeed-nearby/releases/download/v1.0.0/"
+        assertTrue(UpdateEndpoints.isReleaseAssetUrl(base + "Nearby-1.0.0-arm64-v8a.apk"))
         for (bad in listOf(
-            "http://github.com/MeshLive/meshlive-android/releases/download/v1/a.apk",
-            "https://github.com.evil.example/MeshLive/meshlive-android/releases/download/v1/a.apk",
-            "https://evil@github.com/MeshLive/meshlive-android/releases/download/v1/a.apk",
-            "https://github.com:8443/MeshLive/meshlive-android/releases/download/v1/a.apk",
-            "https://github.com/MeshLive/meshlive-android/releases/download/../../../evil/a.apk",
-            "https://github.com/MeshLive/meshlive-android/releases/download/v1/a.apk?x=1",
-            "https://github.com/MeshLive/meshlive-android/releases/download/v1/%2e%2e/a.apk",
-            "https://github.com/MeshLive/other/releases/download/v1/a.apk",
-            "https://api.github.com/repos/MeshLive/meshlive-android/releases/assets/1",
+            "http://github.com/Slaze/livefeed-nearby/releases/download/v1/a.apk",
+            "https://github.com.evil.example/Slaze/livefeed-nearby/releases/download/v1/a.apk",
+            "https://evil@github.com/Slaze/livefeed-nearby/releases/download/v1/a.apk",
+            "https://github.com:8443/Slaze/livefeed-nearby/releases/download/v1/a.apk",
+            "https://github.com/Slaze/livefeed-nearby/releases/download/../../../evil/a.apk",
+            "https://github.com/Slaze/livefeed-nearby/releases/download/v1/a.apk?x=1",
+            "https://github.com/Slaze/livefeed-nearby/releases/download/v1/%2e%2e/a.apk",
+            "https://github.com/Nearby/other/releases/download/v1/a.apk",
+            "https://api.github.com/repos/Slaze/livefeed-nearby/releases/assets/1",
             "",
         )) {
             assertFalse("'$bad'", UpdateEndpoints.isReleaseAssetUrl(bad))
@@ -200,14 +200,14 @@ class GitHubReleaseTest {
         assertTrue(upToDate is CheckOutcome.UpToDate)
         assertTrue("an installed newer build is not downgraded", UpdateFlow.evaluate(body, "0.2.0", 22, listOf("arm64-v8a")) is CheckOutcome.UpToDate)
 
-        val older = body.replace("v0.1.0-beta", "v0.2.0").replace("MeshLive-0.1.0-beta-", "MeshLive-0.2.0-")
+        val older = body.replace("v0.1.0-beta", "v0.2.0").replace("Nearby-0.1.0-beta-", "Nearby-0.2.0-")
         val offer = UpdateFlow.evaluate(older, "0.1.0-beta", 12, listOf("arm64-v8a")) as CheckOutcome.Available
-        assertEquals("MeshLive-0.2.0-arm64-v8a.apk", offer.apk.name)
+        assertEquals("Nearby-0.2.0-arm64-v8a.apk", offer.apk.name)
         assertFalse(offer.needsSums)
         assertEquals("SHA256SUMS", offer.sums!!.name)
 
         assertTrue(UpdateFlow.evaluate(older, "0.1.0-beta", 11, listOf("arm64-v8a")) is CheckOutcome.Available)
-        val tiny = older.replace("MeshLive-0.2.0-arm64-v8a.apk", "MeshLive-0.2.0-other.apk")
+        val tiny = older.replace("Nearby-0.2.0-arm64-v8a.apk", "Nearby-0.2.0-other.apk")
         assertTrue(UpdateFlow.evaluate(tiny, "0.1.0-beta", 12, listOf("arm64-v8a")) is CheckOutcome.NoFileForThisPhone)
         assertTrue(UpdateFlow.evaluate("{", "0.1.0-beta", 12, emptyList()) is CheckOutcome.Unusable)
         assertTrue(UpdateFlow.evaluate(body, "garbage", 12, emptyList()) is CheckOutcome.Unusable)
@@ -215,13 +215,13 @@ class GitHubReleaseTest {
 
     @Test
     fun aPreReleaseOfTheSameNumberIsOlderThanItsRelease() {
-        val newer = fixture.replace("v0.1.0-beta", "v0.1.0").replace("MeshLive-0.1.0-beta-", "MeshLive-0.1.0-")
+        val newer = fixture.replace("v0.1.0-beta", "v0.1.0").replace("Nearby-0.1.0-beta-", "Nearby-0.1.0-")
         assertTrue(UpdateFlow.evaluate(newer, "0.1.0-beta", 12, listOf("arm64-v8a")) is CheckOutcome.Available)
     }
 
     @Test
     fun publishedHashIsReadFromTheDigestElseFromTheSums() {
-        val body = fixture.replace("v0.1.0-beta", "v0.2.0").replace("MeshLive-0.1.0-beta-", "MeshLive-0.2.0-")
+        val body = fixture.replace("v0.1.0-beta", "v0.2.0").replace("Nearby-0.1.0-beta-", "Nearby-0.2.0-")
         val offer = UpdateFlow.evaluate(body, "0.1.0-beta", 12, listOf("arm64-v8a")) as CheckOutcome.Available
         assertEquals(offer.apk.sha256, UpdateFlow.publishedSha256(offer, null))
         val noDigest = offer.copy(apk = offer.apk.copy(sha256 = null))
@@ -238,20 +238,20 @@ class GitHubReleaseTest {
     @Test
     fun aMirrorIsAnotherSourceWithTheSameChecksAndNoSpecialTrust() {
         val mirror = UpdateSource(
-            latestUrl = "https://updates.example.org/meshlive/latest.json",
-            assetUrlPrefix = "https://updates.example.org/meshlive/download/",
-            pageUrlPrefix = "https://updates.example.org/meshlive/",
-            releasesPage = "https://updates.example.org/meshlive/",
+            latestUrl = "https://updates.example.org/nearby/latest.json",
+            assetUrlPrefix = "https://updates.example.org/nearby/download/",
+            pageUrlPrefix = "https://updates.example.org/nearby/",
+            releasesPage = "https://updates.example.org/nearby/",
             redirectHosts = listOf("updates.example.org", ".cdn.example.org"),
         )
-        val body = fixture.replace("https://github.com/MeshLive/meshlive-android/releases/download/", "https://updates.example.org/meshlive/download/")
-            .replace("v0.1.0-beta", "v0.2.0").replace("MeshLive-0.1.0-beta-", "MeshLive-0.2.0-")
+        val body = fixture.replace("https://github.com/Slaze/livefeed-nearby/releases/download/", "https://updates.example.org/nearby/download/")
+            .replace("v0.1.0-beta", "v0.2.0").replace("Nearby-0.1.0-beta-", "Nearby-0.2.0-")
         assertTrue(UpdateFlow.evaluate(body, "0.1.0-beta", 12, listOf("arm64-v8a"), mirror) is CheckOutcome.Available)
         assertTrue("the same body is refused under the GitHub source", UpdateFlow.evaluate(body, "0.1.0-beta", 12, listOf("arm64-v8a")) is CheckOutcome.NoFileForThisPhone)
         assertTrue(mirror.isAllowedRedirect("https://eu.cdn.example.org/a"))
         assertFalse(mirror.isAllowedRedirect("https://cdn.example.org.evil.net/a"))
         assertFalse(mirror.isAllowedRedirect("https://github.com/a"))
-        assertFalse(mirror.isReleaseAssetUrl("https://updates.example.org.evil.net/meshlive/download/a.apk"))
+        assertFalse(mirror.isReleaseAssetUrl("https://updates.example.org.evil.net/nearby/download/a.apk"))
         // The default source has no mirror host in it.
         assertFalse(UpdateSource.GITHUB.isAllowedRedirect("https://updates.example.org/a"))
     }
@@ -260,7 +260,7 @@ class GitHubReleaseTest {
     fun aLongReleaseBodyDoesNotBreakTheCheck() {
         // GitHub allows 125,000 characters of release notes (security review F9).
         val body = "x".repeat(125_000)
-        val big = fixture.replace("\"body\": \"MeshLive 0.1.0-beta (fixture: the real release notes are not needed by the parser).\"", "\"body\": \"$body\"")
+        val big = fixture.replace("\"body\": \"Nearby 0.1.0-beta (fixture: the real release notes are not needed by the parser).\"", "\"body\": \"$body\"")
         assertTrue(big.length > 125_000)
         assertEquals("v0.1.0-beta", GitHubReleases.parseLatest(big).tag)
         assertTrue(big.toByteArray().size < GitHubReleases.MAX_LATEST_BYTES)

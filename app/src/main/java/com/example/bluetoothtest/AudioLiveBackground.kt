@@ -69,7 +69,7 @@ internal object AudioLiveMediaSession {
     @Synchronized
     fun open(context: Context, onToggleMute: () -> Unit) {
         if (session != null) return
-        val created = MediaSession(context.applicationContext, "MeshLiveRadio")
+        val created = MediaSession(context.applicationContext, "NearbyRadio")
         created.setCallback(object : MediaSession.Callback() {
             override fun onMediaButtonEvent(mediaButtonIntent: Intent): Boolean {
                 @Suppress("DEPRECATION")

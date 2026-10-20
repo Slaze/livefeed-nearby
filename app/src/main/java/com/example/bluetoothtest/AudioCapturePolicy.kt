@@ -10,7 +10,7 @@ import android.media.MediaRecorder
 
 // ---- Effect default-state logging (U-02) ------------------------------------------------------------
 
-/** UUIDs of the AOSP software effects (WebRtcAudioEffects excludes them; MeshLive has no better AEC, so it keeps them). */
+/** UUIDs of the AOSP software effects (WebRtcAudioEffects excludes them; Nearby has no better AEC, so it keeps them). */
 internal object AudioEffectUuids {
     const val AOSP_SOFTWARE_AEC = "bb392ec0-8d4d-11e0-a896-0002a5d5c51b"
     const val AOSP_SOFTWARE_NS = "c06c8400-8e06-11e0-9cb6-0002a5d5c51b"

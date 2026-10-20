@@ -5,7 +5,7 @@ import android.media.AudioDeviceInfo
 import android.media.AudioManager
 
 /**
- * Bluetooth audio shares the radio with MeshLive's LE links (G-10), as 2.4 GHz Wi-Fi does ([WifiCoexistence]). When
+ * Bluetooth audio shares the radio with Nearby's LE links (G-10), as 2.4 GHz Wi-Fi does ([WifiCoexistence]). When
  * A2DP streams, the stack raises the earbud ACL priority (bta_av_act.cc:1101-1115 -> l2cu_set_acl_priority, a vendor
  * command on Broadcom, Synaptics and Unisoc controllers); eSCO reserves fixed slots and an LE Audio stream reserves
  * isochronous intervals. LE video then slows or its links time out the moment the user wears earbuds, and recovers when
@@ -64,7 +64,7 @@ internal object BluetoothAudioCoexistence {
 
     /** Plain-language advice when Bluetooth audio is active, or null. */
     fun advice(state: BluetoothAudioState = state()): String? = if (state.active) {
-        "Bluetooth headphones or a speaker are in use. They share the radio with MeshLive and can slow video or drop links. " +
+        "Bluetooth headphones or a speaker are in use. They share the radio with Nearby and can slow video or drop links. " +
             "Use the phone speaker or wired headphones for the smoothest video."
     } else {
         null

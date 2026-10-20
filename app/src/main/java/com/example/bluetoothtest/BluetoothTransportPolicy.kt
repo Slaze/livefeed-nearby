@@ -112,7 +112,7 @@ internal object BluetoothTransportPolicy {
             "every 2 ms for at most 500 ms before the link fails as before. Nothing is dropped or reordered. The " +
             "Experimental arm test_gatt_busy_wedge=recover (default legacy, root review) retries every 25 ms (the framework " +
             "has already retried 5 x 10 ms inside the call) and, on Android 13-14, ends the link at once on a busy answer " +
-            "while MeshLive has nothing in flight on that client (android13-14-gatt-client-wedged-after-busy).",
+            "while Nearby has nothing in flight on that client (android13-14-gatt-client-wedged-after-busy).",
         sources = listOf(
             PolicySource(API_REFERENCE,
                 "https://developer.android.com/reference/android/bluetooth/BluetoothStatusCodes#ERROR_GATT_WRITE_REQUEST_BUSY",

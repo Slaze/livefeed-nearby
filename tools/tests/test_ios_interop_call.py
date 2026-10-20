@@ -129,7 +129,7 @@ class CommandTest(unittest.TestCase):
 
     def test_launch_command_is_the_runner_call_screen_launch_with_no_raw_input(self):
         command = interop.launch_command(interop.launch_extras(self.args()))
-        self.assertEqual(command[:6], ["shell", "am", "start", "-W", "-n", "io.github.meshlive.app/com.example.bluetoothtest.MainActivity"])
+        self.assertEqual(command[:6], ["shell", "am", "start", "-W", "-n", "com.livefeed.nearby/com.example.bluetoothtest.MainActivity"])
         flat = " ".join(command)
         for expected in ("--es test_transport gatt", "--es test_codec vp9", "--es test_playback_delay balanced",
                          "--ez test_thermal_reduction false", "--ez test_private_call_browser true",
@@ -147,7 +147,7 @@ class CommandTest(unittest.TestCase):
         self.assertEqual(interop.invite_control("aabbccddeeff", True), "voice_call:aabbccddeeff")
         self.assertEqual(interop.invite_control("aabbccddeeff", False), "call:aabbccddeeff")
         self.assertEqual(interop.control_command("accept"), ["shell", "am", "start", "-n",
-                         "io.github.meshlive.app/com.example.bluetoothtest.MainActivity", "--es", "test_control", "accept"])
+                         "com.livefeed.nearby/com.example.bluetoothtest.MainActivity", "--es", "test_control", "accept"])
 
 
 class FakePhone:

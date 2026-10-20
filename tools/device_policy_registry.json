@@ -1393,7 +1393,7 @@
       "fallback": "Off: flush() then start() as before on every component.",
       "evidence": ["none: no owned phone ships c2.mtk decoders (the A15s is OMX.MTK on Android 10); the decision is unit-tested and the rebuild path is the one used for decoder changes"],
       "confidence": "MEDIUM",
-      "confidence_note": "Google ships the workaround (b/362904942), so the defect exists; Media3 names exactly avc, hevc and vp9 and only with a video sink, so every other c2.mtk. decoder (c2.mtk.av1.decoder) is an extension of the prefix rule. Whether MeshLive's TextureView recovery path is hit is unmeasured. A rebuild is about 100-300 ms slower, only on matched components.",
+      "confidence_note": "Google ships the workaround (b/362904942), so the defect exists; Media3 names exactly avc, hevc and vp9 and only with a video sink, so every other c2.mtk. decoder (c2.mtk.av1.decoder) is an extension of the prefix rule. Whether Nearby's TextureView recovery path is hit is unmeasured. A rebuild is about 100-300 ms slower, only on matched components.",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=c2-mtk-release-instead-of-flush",
       "legacy_switches": [],
@@ -1592,7 +1592,7 @@
       "fallback": "Off (default): the framework's candidate order and KEY_LOW_LATENCY gated on FEATURE_LowLatency.",
       "evidence": ["none: Experimental; evidence in the sources is AVC/HEVC, VP9/AV1 unconfirmed"],
       "confidence": "LOW",
-      "confidence_note": "large low-latency clients use these keys, but MeshLive's streams have no B-frames and are AV1/VP9, where the reorder delay these keys remove is smaller; the benefit is unmeasured",
+      "confidence_note": "large low-latency clients use these keys, but Nearby's streams have no B-frames and are AV1/VP9, where the reorder delay these keys remove is smaller; the benefit is unmeasured",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=decoder-low-latency-ladder-arm",
       "legacy_switches": [],
@@ -1633,7 +1633,7 @@
       "fallback": "Off (default): no priority key.",
       "evidence": ["none: Experimental"],
       "confidence": "MEDIUM",
-      "confidence_note": "priority alone is risk-free in Media3's decoder format; its latency effect on MeshLive is unmeasured",
+      "confidence_note": "priority alone is risk-free in Media3's decoder format; its latency effect on Nearby is unmeasured",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=decoder-realtime-priority-arm",
       "legacy_switches": [],
@@ -1663,7 +1663,7 @@
         "prefixes": ["OMX.MTK.", "c2.mtk."]
       },
       "effects": [],
-      "behaviour": "Reports phones with a MediaTek decoder. MediaTek decoders may return a default crop Rect (for example 0,0,318,238) and output presentation timestamps of -1 or 0. MeshLive already reads the crop-left/right/top/bottom integers (decodedOutputSize) and ignores a 0x0 output size; the output timestamp guard (match decoder output to input by PTS) has no effect yet.",
+      "behaviour": "Reports phones with a MediaTek decoder. MediaTek decoders may return a default crop Rect (for example 0,0,318,238) and output presentation timestamps of -1 or 0. Nearby already reads the crop-left/right/top/bottom integers (decodedOutputSize) and ignores a 0x0 output size; the output timestamp guard (match decoder output to input by PTS) has no effect yet.",
       "sources": [
         {
           "kind": "VENDOR_DOC",
@@ -1704,7 +1704,7 @@
       "matcher_text": "API >= 33; SoC [TENSOR]",
       "component": null,
       "effects": [],
-      "behaviour": "Reports Tensor phones on API 33+. If enabled, MeshLive would ignore the decoder-reported colour standard and treat the stream as BT.709, which the encoder declares. The matcher is a superset (SoC family Tensor); Gecko's rule is SOC_MODEL exactly Tensor or GS201 for the AV1 mislabel and SOC_MANUFACTURER Google with API 34+ for SMPTE-432. The decoder renders to a Surface, so the compositor handles colour and only flicker is expected.",
+      "behaviour": "Reports Tensor phones on API 33+. If enabled, Nearby would ignore the decoder-reported colour standard and treat the stream as BT.709, which the encoder declares. The matcher is a superset (SoC family Tensor); Gecko's rule is SOC_MODEL exactly Tensor or GS201 for the AV1 mislabel and SOC_MANUFACTURER Google with API 34+ for SMPTE-432. The decoder renders to a Surface, so the compositor handles colour and only flicker is expected.",
       "sources": [
         {
           "kind": "VENDOR_DOC",
@@ -1718,7 +1718,7 @@
       "fallback": "Not applied: the decoder output is rendered as the platform presents it.",
       "evidence": ["none: no Pixel among the required phones"],
       "confidence": "MEDIUM",
-      "confidence_note": "a production fix in Gecko with bug references; unmeasured with MeshLive's encoder tags",
+      "confidence_note": "a production fix in Gecko with bug references; unmeasured with Nearby's encoder tags",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=tensor-av1-decoder-colour-standard-misreport",
       "legacy_switches": [],
@@ -1908,7 +1908,7 @@
       "matcher_text": "API >= 33",
       "component": null,
       "effects": ["retry a busy GATT write every 2 ms for up to 500 ms"],
-      "behaviour": "When writeCharacteristic returns ERROR_GATT_WRITE_REQUEST_BUSY (201) the same write is retried every 2 ms for at most 500 ms before the link fails as before. Nothing is dropped or reordered. The Experimental arm test_gatt_busy_wedge=recover (default legacy, root review) retries every 25 ms (the framework has already retried 5 x 10 ms inside the call) and, on Android 13-14, ends the link at once on a busy answer while MeshLive has nothing in flight on that client (android13-14-gatt-client-wedged-after-busy).",
+      "behaviour": "When writeCharacteristic returns ERROR_GATT_WRITE_REQUEST_BUSY (201) the same write is retried every 2 ms for at most 500 ms before the link fails as before. Nothing is dropped or reordered. The Experimental arm test_gatt_busy_wedge=recover (default legacy, root review) retries every 25 ms (the framework has already retried 5 x 10 ms inside the call) and, on Android 13-14, ends the link at once on a busy answer while Nearby has nothing in flight on that client (android13-14-gatt-client-wedged-after-busy).",
       "sources": [
         {
           "kind": "API_REFERENCE",
@@ -2260,7 +2260,7 @@
       "matcher_text": "every phone",
       "component": null,
       "effects": ["phone-wide LE link budget: 7 up to Android 14 (property 8..16 from Android 15), 1 reserved for the upstream parent"],
-      "behaviour": "Logging on every phone: the link budget line shows the stack's limit (7 links up to Android 14; bluetooth.core.le.max_number_of_concurrent_connections clamped to 8..16 from Android 15), the links the stack reports and MeshLive's own, and how many child slots remain after one slot reserved for the upstream parent. A fan-out or relay child past the budget can be refused as \"relay full\" before the stack strands it; that refusal is Experimental (test_link_budget_admission, default off) because watches and earbuds hold links the app cannot tell from its own. The first unexplained drop of an existing link lowers the budget for the run. The line also names the other hard ceilings by SDK: ACL links 13 (Android 8-12) / 16, L2CAP channels 32 / 64 (Android 14), 32 GATT clients, 7 BTA DM peers up to Android 12, 128 LE PSMs, 30 RFCOMM ports.",
+      "behaviour": "Logging on every phone: the link budget line shows the stack's limit (7 links up to Android 14; bluetooth.core.le.max_number_of_concurrent_connections clamped to 8..16 from Android 15), the links the stack reports and Nearby's own, and how many child slots remain after one slot reserved for the upstream parent. A fan-out or relay child past the budget can be refused as \"relay full\" before the stack strands it; that refusal is Experimental (test_link_budget_admission, default off) because watches and earbuds hold links the app cannot tell from its own. The first unexplained drop of an existing link lowers the budget for the run. The line also names the other hard ceilings by SDK: ACL links 13 (Android 8-12) / 16, L2CAP channels 32 / 64 (Android 14), 32 GATT clients, 7 BTA DM peers up to Android 12, 128 LE PSMs, 30 RFCOMM ports.",
       "sources": [
         {
           "kind": "AOSP_SOURCE",
@@ -2326,7 +2326,7 @@
       "matcher_text": "every phone",
       "component": null,
       "effects": ["count GATT objects per owner; classify status 257 (32-registration pool) and 128 (22-client pool)"],
-      "behaviour": "MeshLive counts the BluetoothGatt, BluetoothGattServer and scanner objects it holds per owner, and classifies a connect that fails with status 257 as \"registration pool exhausted\" and 128 as \"client pool exhausted\". Such a failure is not retried in a tight loop: one retry follows only after idle, unused clients of this app were closed; then the failure is shown. Six fresh-connect failures across two peers that were in range stop new attempts and show restart-Bluetooth guidance.",
+      "behaviour": "Nearby counts the BluetoothGatt, BluetoothGattServer and scanner objects it holds per owner, and classifies a connect that fails with status 257 as \"registration pool exhausted\" and 128 as \"client pool exhausted\". Such a failure is not retried in a tight loop: one retry follows only after idle, unused clients of this app were closed; then the failure is shown. Six fresh-connect failures across two peers that were in range stop new attempts and show restart-Bluetooth guidance.",
       "sources": [
         {
           "kind": "AOSP_SOURCE",
@@ -2404,7 +2404,7 @@
       "area": "BLUETOOTH_TRANSPORT",
       "validation": "UPSTREAM_DOCUMENTED",
       "fallback": "The client is closed immediately after disconnect() on Android 12+, after the disconnect callback on Android 10/11.",
-      "evidence": ["none: no saved run shows an early-close leak; frequency depends on how fast MeshLive deadlines fire"],
+      "evidence": ["none: no saved run shows an early-close leak; frequency depends on how fast Nearby deadlines fire"],
       "confidence": "HIGH",
       "confidence_note": "Defect and fix are documented; builds carrying the fix (android14-qpr2 and later) only pay a bounded wait that never fires after a callback.",
       "reviewed": "2026-10-14",
@@ -2433,7 +2433,7 @@
       "matcher_text": "API <= 34",
       "component": null,
       "effects": ["busy write with nothing in flight = wedged client: end the link at once; with another local holder retry every 25 ms up to 500 ms"],
-      "behaviour": "MeshLive tracks its own outstanding write on each GATT client. A busy answer (201 on Android 13-14, a bare false before API 33) while it has none in flight is not its own flag: the framework already retried 5 x 10 ms, so the client object is stuck (mDeviceBusy never cleared, or the per-peer write permit leaked by a client that disconnected mid-write). The 2 ms x 500 ms spin cannot succeed then. The link is ended at once with a distinct failure, the client is closed, and the next connect to that peer waits for the ACL to drop (up to 2 s) so a new client does not inherit the stuck permit. When the registry shows another local client to the same peer (a real second holder of the permit) the write is still retried for up to 500 ms, now every 25 ms. ROOT REVIEW: this ends a link on ONE busy answer on SDK 33-34 without phone evidence, so it is applied only with test_gatt_busy_wedge=recover (DEBUG, Experimental); the shipped default is legacy, the old 2 ms spin.",
+      "behaviour": "Nearby tracks its own outstanding write on each GATT client. A busy answer (201 on Android 13-14, a bare false before API 33) while it has none in flight is not its own flag: the framework already retried 5 x 10 ms, so the client object is stuck (mDeviceBusy never cleared, or the per-peer write permit leaked by a client that disconnected mid-write). The 2 ms x 500 ms spin cannot succeed then. The link is ended at once with a distinct failure, the client is closed, and the next connect to that peer waits for the ACL to drop (up to 2 s) so a new client does not inherit the stuck permit. When the registry shows another local client to the same peer (a real second holder of the permit) the write is still retried for up to 500 ms, now every 25 ms. ROOT REVIEW: this ends a link on ONE busy answer on SDK 33-34 without phone evidence, so it is applied only with test_gatt_busy_wedge=recover (DEBUG, Experimental); the shipped default is legacy, the old 2 ms spin.",
       "sources": [
         {
           "kind": "AOSP_COMMIT",
@@ -2499,7 +2499,7 @@
       "matcher_text": "every phone",
       "component": null,
       "effects": ["close a client whose CONNECTED callback arrives after it was cancelled"],
-      "behaviour": "When a CONNECTED callback arrives for a client MeshLive already cancelled, the client is disconnected and closed (once; registry-checked) and the callback is otherwise ignored, so a cancelled attempt cannot leave a live BluetoothGatt and its registration behind. It fires only on that stale callback.",
+      "behaviour": "When a CONNECTED callback arrives for a client Nearby already cancelled, the client is disconnected and closed (once; registry-checked) and the callback is otherwise ignored, so a cancelled attempt cannot leave a live BluetoothGatt and its registration behind. It fires only on that stale callback.",
       "sources": [
         {
           "kind": "VENDOR_DOC",
@@ -2516,9 +2516,9 @@
       "area": "BLUETOOTH_TRANSPORT",
       "validation": "UPSTREAM_DOCUMENTED",
       "fallback": "A callback after cancel is ignored.",
-      "evidence": ["none: not observed in saved MeshLive runs; library field reports only"],
+      "evidence": ["none: not observed in saved Nearby runs; library field reports only"],
       "confidence": "MEDIUM",
-      "confidence_note": "Library-level evidence on other Android versions; MeshLive's own teardown already closes the client, so the check usually finds nothing to do.",
+      "confidence_note": "Library-level evidence on other Android versions; Nearby's own teardown already closes the client, so the check usually finds nothing to do.",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=gatt-stale-connected-callback",
       "legacy_switches": [],
@@ -2582,7 +2582,7 @@
       "area": "BLUETOOTH_TRANSPORT",
       "validation": "UPSTREAM_DOCUMENTED",
       "fallback": "Silent links end at the 12 s attempt deadline or the 3 s MTU watchdog, unclassified.",
-      "evidence": ["none: no saved MeshLive run shows a silent connected link; the 2 s window is the backlog's starting value"],
+      "evidence": ["none: no saved Nearby run shows a silent connected link; the 2 s window is the backlog's starting value"],
       "confidence": "MEDIUM",
       "confidence_note": "The mechanism is AOSP; the OEM hang reports are one-project symptoms with LOW cause confidence; thresholds are unmeasured on the six phones.",
       "reviewed": "2026-10-14",
@@ -2640,7 +2640,7 @@
       "fallback": "No dial check line.",
       "evidence": ["none: no saved run records a second client or a crossed link to one remote; the dial-check line is the first record"],
       "confidence": "HIGH",
-      "confidence_note": "Commit messages are primary; how often MeshLive's probes, control and media clients overlap on one address is unmeasured.",
+      "confidence_note": "Commit messages are primary; how often Nearby's probes, control and media clients overlap on one address is unmeasured.",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=gatt-one-client-per-remote",
       "legacy_switches": [],
@@ -2691,7 +2691,7 @@
       "fallback": "No Bluetooth audio field in the diagnostics.",
       "evidence": ["none: no saved run has Bluetooth audio active; the 2.4 GHz Wi-Fi halving (WifiCoexistence) is the measured analogue"],
       "confidence": "MEDIUM",
-      "confidence_note": "The priority mechanism is AOSP source for three controller vendors; the size of the loss on the MeshLive phones is unmeasured.",
+      "confidence_note": "The priority mechanism is AOSP source for three controller vendors; the size of the loss on the Nearby phones is unmeasured.",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=bluetooth-audio-airtime-coexistence",
       "legacy_switches": [],
@@ -2747,7 +2747,7 @@
       "fallback": "The server keeps the link by its own traffic; no hold call.",
       "evidence": ["none: the M31 -> S24 snoop in le-coc-eatt-stranded-channels shows Android 12 centrals try EATT; the hold's effect is unmeasured"],
       "confidence": "MEDIUM",
-      "confidence_note": "The defect window is AOSP; that MeshLive links trigger it, and that the hold prevents it, are not shown.",
+      "confidence_note": "The defect window is AOSP; that Nearby links trigger it, and that the hold prevents it, are not shown.",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=server-only-link-idle-drop",
       "legacy_switches": [],
@@ -2873,7 +2873,7 @@
       "area": "BLUETOOTH_TRANSPORT",
       "validation": "UPSTREAM_DOCUMENTED",
       "fallback": "A hung discovery ends at the attempt deadline.",
-      "evidence": ["none: not seen on the S22 in saved MeshLive runs"],
+      "evidence": ["none: not seen on the S22 in saved Nearby runs"],
       "confidence": "LOW",
       "confidence_note": "Symptom MEDIUM-HIGH on those phones, cause LOW; a single library thread.",
       "reviewed": "2026-10-14",
@@ -2919,7 +2919,7 @@
       "area": "BLUETOOTH_TRANSPORT",
       "validation": "EXPERIMENTAL",
       "fallback": "connectGatt runs on the calling worker thread.",
-      "evidence": ["none: no MeshLive phone shows the symptom; the A/B is for Samsung pair connect success and latency"],
+      "evidence": ["none: no Nearby phone shows the symptom; the A/B is for Samsung pair connect success and latency"],
       "confidence": "LOW",
       "confidence_note": "Old Huawei report plus one library comment; the cost is main-thread jank when the main thread is busy.",
       "reviewed": "2026-10-14",
@@ -2948,7 +2948,7 @@
       "matcher_text": "every phone",
       "component": null,
       "effects": [],
-      "behaviour": "Experimental (test_gatt_refresh=true, default off): refresh() is called by reflection before the first discovery and logged with the SDK; it fails closed when the hidden API is blocked. The existing refresh when a service is missing is unchanged. The MeshLive GATT layout stays append-only across versions.",
+      "behaviour": "Experimental (test_gatt_refresh=true, default off): refresh() is called by reflection before the first discovery and logged with the SDK; it fails closed when the hidden API is blocked. The existing refresh when a service is missing is unchanged. The Nearby GATT layout stays append-only across versions.",
       "sources": [
         {
           "kind": "VENDOR_DOC",
@@ -2967,7 +2967,7 @@
       "fallback": "The service cache is refreshed only when a service is missing.",
       "evidence": ["none"],
       "confidence": "LOW",
-      "confidence_note": "MeshLive peers are unbonded and the layout changes only with app updates; no case is known.",
+      "confidence_note": "Nearby peers are unbonded and the layout changes only with app updates; no case is known.",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=gatt-refresh-before-discovery",
       "legacy_switches": [],
@@ -5625,7 +5625,7 @@
       "area": "BLUETOOTH_TRANSPORT",
       "validation": "UPSTREAM_DOCUMENTED",
       "fallback": "No marker, no classification; scans are still stopped by their owners' close().",
-      "evidence": ["lane11 ASUS (Android 11, SDK 30, patch 2021-06-01): `dumpsys bluetooth_manager` GATT Scanner Map lists 25 'Ongoing scans' for io.github.meshlive.app (1583 started / 1558 stopped) back to 10-12 and the 32-slot pool full (`MAX client reached: 32`); the three ongoing starts inside the saved logs match, to the second, the first scan of a process the lane driver force-killed (benchmarks/runs/lane11-stats-20261015/m-asus-btmgr). Intermittent: 3 of about 77 force-killed processes in the saved lane11 ASUS logs leaked."],
+      "evidence": ["lane11 ASUS (Android 11, SDK 30, patch 2021-06-01): `dumpsys bluetooth_manager` GATT Scanner Map lists 25 'Ongoing scans' for com.livefeed.nearby (1583 started / 1558 stopped) back to 10-12 and the 32-slot pool full (`MAX client reached: 32`); the three ongoing starts inside the saved logs match, to the second, the first scan of a process the lane driver force-killed (benchmarks/runs/lane11-stats-20261015/m-asus-btmgr). Intermittent: 3 of about 77 force-killed processes in the saved lane11 ASUS logs leaked."],
       "confidence": "HIGH",
       "confidence_note": "AOSP code read for stock Android 10 (fixed in the Android 11 source); measured on an Android 11 ASUS build whose stack still leaked scanner registrations of force-killed processes, so the scope covers SDK 29 and 30. OEM backports unknown. Intermittent, not every kill leaks.",
       "reviewed": "2026-10-14",
@@ -5934,8 +5934,8 @@
       },
       "matcher_text": "API >= 29",
       "component": null,
-      "effects": ["hold a renewable partial wake lock (meshlive:session) during a screen-off active session"],
-      "behaviour": "Only with the Experimental switch test_session_wake_lock=true: a renewable PARTIAL_WAKE_LOCK (meshlive:session, 90 s safety timeout renewed every minute) is held after startForeground succeeded, while the screen is off and the session is an active hop (not idle availability), up to a daily budget; released when the service ends. Default off: no lock is taken.",
+      "effects": ["hold a renewable partial wake lock (nearby:session) during a screen-off active session"],
+      "behaviour": "Only with the Experimental switch test_session_wake_lock=true: a renewable PARTIAL_WAKE_LOCK (nearby:session, 90 s safety timeout renewed every minute) is held after startForeground succeeded, while the screen is off and the session is an active hop (not idle availability), up to a daily budget; released when the service ends. Default off: no lock is taken.",
       "sources": [
         {
           "kind": "PLATFORM_DOC",
@@ -5964,7 +5964,7 @@
       "fallback": "No wake lock is held (the shipped behaviour).",
       "evidence": ["none: not measured on a screen-off relay; needs dumpsys power and timer lateness with the lock on and off"],
       "confidence": "MEDIUM",
-      "confidence_note": "The AOSP rule is certain; whether MeshLive timers stall without the lock, and whether OEM builds honour a foreground-service lock, is unmeasured. A held lock does not prove the CPU stays awake. Who may flip the default (sideload build only) is user question Q-N5.",
+      "confidence_note": "The AOSP rule is certain; whether Nearby timers stall without the lock, and whether OEM builds honour a foreground-service lock, is unmeasured. A held lock does not prove the CPU stays awake. Who may flip the default (sideload build only) is user question Q-N5.",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=fgs-session-wake-lock",
       "legacy_switches": [],
@@ -6093,7 +6093,7 @@
       "matcher_text": "every phone",
       "component": null,
       "effects": ["log each capture effect's default state before enabling; never switch an effect off"],
-      "behaviour": "Before enabling AEC, NS and AGC the app reads each effect's default enabled state, descriptor UUID, implementor and control ownership and logs them with the setEnabled status in BENCHMARK audio_capture (effectState=). No effect is switched off and the AOSP software AEC stays enabled; WebRTC's skip rule is not adopted because MeshLive has no software echo canceller of its own (user question Q-N4).",
+      "behaviour": "Before enabling AEC, NS and AGC the app reads each effect's default enabled state, descriptor UUID, implementor and control ownership and logs them with the setEnabled status in BENCHMARK audio_capture (effectState=). No effect is switched off and the AOSP software AEC stays enabled; WebRTC's skip rule is not adopted because Nearby has no software echo canceller of its own (user question Q-N4).",
       "sources": [
         {
           "kind": "API_REFERENCE",
@@ -6113,7 +6113,7 @@
         {
           "kind": "GOOGLE_OPEN_SOURCE",
           "reference": "https://webrtc.googlesource.com/src/+/42995c384b59f0da002a6078d4a0320af39a16b8/sdk/android/src/java/org/webrtc/audio/WebRtcAudioEffects.java",
-          "note": "WebRTC skips the AOSP software AEC/NS (UUIDs bb392ec0-... and c06c8400-...) because it ships a better software canceler; MeshLive has none, so it keeps them (BACKLOG conflict K2)"
+          "note": "WebRTC skips the AOSP software AEC/NS (UUIDs bb392ec0-... and c06c8400-...) because it ships a better software canceler; Nearby has none, so it keeps them (BACKLOG conflict K2)"
         }
       ],
       "source_status": "OFFICIAL",
@@ -6650,7 +6650,7 @@
       "matcher_text": "API 29-29",
       "component": null,
       "effects": ["assert (log only) that a GATT connect preceded the CoC connect (Android 10 address type)"],
-      "behaviour": "Android 10 does not copy the LE address type into the stack record for a CoC client connect, so a CoC connect to an address the stack did not learn in this Bluetooth session never establishes. MeshLive reads the PSM over GATT first, which creates the record. The client logs BENCHMARK coc_address_precondition and flags a violation so a later refactor cannot break the order. Logging only.",
+      "behaviour": "Android 10 does not copy the LE address type into the stack record for a CoC client connect, so a CoC connect to an address the stack did not learn in this Bluetooth session never establishes. Nearby reads the PSM over GATT first, which creates the record. The client logs BENCHMARK coc_address_precondition and flags a violation so a later refactor cannot break the order. Logging only.",
       "sources": [
         {
           "kind": "AOSP_COMMIT",
@@ -6955,7 +6955,7 @@
       "fallback": "A CoC socket is used as soon as connect() returns.",
       "evidence": ["none: not run on phones"],
       "confidence": "LOW",
-      "confidence_note": "One mesh app uses the pattern; MeshLive has not measured how often an established CoC socket is unusable.",
+      "confidence_note": "One mesh app uses the pattern; Nearby has not measured how often an established CoC socket is unusable.",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=coc-echo-verification",
       "legacy_switches": ["test_coc_echo_verify=true"],
@@ -7498,7 +7498,7 @@
       "fallback": "No effect either way.",
       "evidence": ["none: the Encoder clock log line shows the offset per run"],
       "confidence": "MEDIUM",
-      "confidence_note": "CameraX lists Samsung HARDWARE qcom (every Samsung Snapdragon phone); MeshLive's existing offset check probably already covers it, which the Encoder clock lines of a Snapdragon Samsung would confirm",
+      "confidence_note": "CameraX lists Samsung HARDWARE qcom (every Samsung Snapdragon phone); Nearby's existing offset check probably already covers it, which the Encoder clock lines of a Snapdragon Samsung would confirm",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=camera-timebase-inconsistent",
       "legacy_switches": [],
@@ -7843,7 +7843,7 @@
       "matcher_text": "every phone",
       "component": null,
       "effects": ["advertising-set starts report a failure status instead of throwing"],
-      "behaviour": "startAdvertisingSet validates synchronously: an oversize legacy payload or an unsupported parameter throws IllegalArgumentException, and a start while the adapter is off or turning off throws IllegalStateException (BT Adapter is not turned ON). Every MeshLive advertising start (stable offer and discovery sets, title and reach pages, the capacity probe) now turns those into a failure status the callers already handle, so a delayed restart cannot end the process. One callback object serves one set, and the stable set is started with duration 0 and no event limit so the stack re-enables it after every connection. An adapter-off exception no longer counts as the stack refusing a hidden (non-discoverable) advertisement. Off: the previous direct call (exceptions propagate).",
+      "behaviour": "startAdvertisingSet validates synchronously: an oversize legacy payload or an unsupported parameter throws IllegalArgumentException, and a start while the adapter is off or turning off throws IllegalStateException (BT Adapter is not turned ON). Every Nearby advertising start (stable offer and discovery sets, title and reach pages, the capacity probe) now turns those into a failure status the callers already handle, so a delayed restart cannot end the process. One callback object serves one set, and the stable set is started with duration 0 and no event limit so the stack re-enables it after every connection. An adapter-off exception no longer counts as the stack refusing a hidden (non-discoverable) advertisement. Off: the previous direct call (exceptions propagate).",
       "sources": [
         {
           "kind": "AOSP_SOURCE",
@@ -7894,7 +7894,7 @@
       "matcher_text": "every phone",
       "component": null,
       "effects": ["learn the advertising-set budget from start refusals; optional sets yield to the session-critical one"],
-      "behaviour": "The number of advertising instances is whatever the controller reports (the CDD only says SHOULD 4, a cheap controller can offer one) and every app and the system share it, so it cannot be read. MeshLive learns it: a refusal with TOO_MANY_ADVERTISERS while it owns n sets means the budget is n now (kept five minutes). With a short budget the reach and title sets do not start (they need one instance plus one spare), and a refused session-critical set (the stream's own advertisement) first stops the title set, then the reach set, waits for the stack to confirm the stop (the instance is freed asynchronously) and retries once. Priority: stable offer > reach > title > probe. Starts also wait up to 0.7 s for stops still in flight. No advertisement changes. Off: previous behaviour (probe-only gating, no preemption, no stop wait).",
+      "behaviour": "The number of advertising instances is whatever the controller reports (the CDD only says SHOULD 4, a cheap controller can offer one) and every app and the system share it, so it cannot be read. Nearby learns it: a refusal with TOO_MANY_ADVERTISERS while it owns n sets means the budget is n now (kept five minutes). With a short budget the reach and title sets do not start (they need one instance plus one spare), and a refused session-critical set (the stream's own advertisement) first stops the title set, then the reach set, waits for the stack to confirm the stop (the instance is freed asynchronously) and retries once. Priority: stable offer > reach > title > probe. Starts also wait up to 0.7 s for stops still in flight. No advertisement changes. Off: previous behaviour (probe-only gating, no preemption, no stop wait).",
       "sources": [
         {
           "kind": "CDD",
@@ -7955,7 +7955,7 @@
       "matcher_text": "every phone",
       "component": null,
       "effects": ["restart an advertising set that stopped without being asked, with back-off"],
-      "behaviour": "If the stack reports the stable set stopped (onAdvertisingSetStopped) without MeshLive asking, or reports it disabled and does not enable it again within 4 s (the stack itself disables a connectable set for an instant to rotate its address every 7 to 15 minutes), the set is started again as a new set (new address) with back-off 1, 2, 4, 8, 16 s and at most five restarts in ten minutes; then the owner's own lost-handling takes over. The length of each disable gap is logged, which is the only observable trace of the address rotation. Title and reach sets restart the same way. Off: a stopped set stays stopped until its owner starts it again.",
+      "behaviour": "If the stack reports the stable set stopped (onAdvertisingSetStopped) without Nearby asking, or reports it disabled and does not enable it again within 4 s (the stack itself disables a connectable set for an instant to rotate its address every 7 to 15 minutes), the set is started again as a new set (new address) with back-off 1, 2, 4, 8, 16 s and at most five restarts in ten minutes; then the owner's own lost-handling takes over. The length of each disable gap is logged, which is the only observable trace of the address rotation. Title and reach sets restart the same way. Off: a stopped set stays stopped until its owner starts it again.",
       "sources": [
         {
           "kind": "AOSP_SOURCE",
@@ -8006,7 +8006,7 @@
       "matcher_text": "every phone",
       "component": null,
       "effects": ["report 'no free advertising slots although none are ours' with the Bluetooth restart remedy"],
-      "behaviour": "Two TOO_MANY_ADVERTISERS refusals while MeshLive owns no advertising set mean other apps, or a leaked stack, hold every instance. Reports on Redmi, Mi 11 Lite, Galaxy A54 and Oppo phones say this persists until the phone restarts, and Android 15's advertising manager leaks a slot when an address update meets a set removal. MeshLive says so in plain words and names the remedy (turn Bluetooth off and on; restart the phone) through the status line and BENCHMARK adv_budget stuck, and exposes the state to the reliability banner. It does not toggle Bluetooth. Off: the start fails with its status only.",
+      "behaviour": "Two TOO_MANY_ADVERTISERS refusals while Nearby owns no advertising set mean other apps, or a leaked stack, hold every instance. Reports on Redmi, Mi 11 Lite, Galaxy A54 and Oppo phones say this persists until the phone restarts, and Android 15's advertising manager leaks a slot when an address update meets a set removal. Nearby says so in plain words and names the remedy (turn Bluetooth off and on; restart the phone) through the status line and BENCHMARK adv_budget stuck, and exposes the state to the reliability banner. It does not toggle Bluetooth. Off: the start fails with its status only.",
       "sources": [
         {
           "kind": "AOSP_COMMIT",
@@ -8056,8 +8056,8 @@
       },
       "matcher_text": "every phone",
       "component": null,
-      "effects": ["every MeshLive legacy advertisement fits the 28-byte connectable budget of Android 13 and below"],
-      "behaviour": "Android 13 and below charge a connectable legacy advertisement the 3-byte Flags field, leaving 28 bytes of primary data; Android 14 charges it only when the set is also discoverable (31 bytes for the hidden-name sets). The same payload that starts on Android 14 fails with DATA_TOO_LARGE on Android 12/13. MeshLive's connectable primary data is one 128-bit service UUID (18 bytes) and every manufacturer-data page is in the scan response (31 bytes, never charged flags); a unit test checks the largest announcement, title, reach and name page against the smaller budget, and a DEBUG line logs the sizes at each start. No advertisement changed.",
+      "effects": ["every Nearby legacy advertisement fits the 28-byte connectable budget of Android 13 and below"],
+      "behaviour": "Android 13 and below charge a connectable legacy advertisement the 3-byte Flags field, leaving 28 bytes of primary data; Android 14 charges it only when the set is also discoverable (31 bytes for the hidden-name sets). The same payload that starts on Android 14 fails with DATA_TOO_LARGE on Android 12/13. Nearby's connectable primary data is one 128-bit service UUID (18 bytes) and every manufacturer-data page is in the scan response (31 bytes, never charged flags); a unit test checks the largest announcement, title, reach and name page against the smaller budget, and a DEBUG line logs the sizes at each start. No advertisement changed.",
       "sources": [
         {
           "kind": "AOSP_SOURCE",
@@ -8108,7 +8108,7 @@
       "matcher_text": "every phone",
       "component": null,
       "effects": ["advertising is never gated on BluetoothAdapter.isMultipleAdvertisementSupported()"],
-      "behaviour": "BluetoothAdapter.isMultipleAdvertisementSupported() returns false on phones where advertising works (Galaxy S20 Exynos), and is true only above a controller-reported instance threshold. MeshLive reads it for logging only (adv_set_probe, support bundle) and decides from actual start results: the budget is learned by starting sets. A source test keeps the flag out of the advertising code's decisions.",
+      "behaviour": "BluetoothAdapter.isMultipleAdvertisementSupported() returns false on phones where advertising works (Galaxy S20 Exynos), and is true only above a controller-reported instance threshold. Nearby reads it for logging only (adv_set_probe, support bundle) and decides from actual start results: the budget is learned by starting sets. A source test keeps the flag out of the advertising code's decisions.",
       "sources": [
         {
           "kind": "API_REFERENCE",
@@ -8127,7 +8127,7 @@
       "fallback": "n/a: the flag is not consulted.",
       "evidence": ["none"],
       "confidence": "MEDIUM",
-      "confidence_note": "Two independent projects (Herald, AltBeacon) report the false negative; MeshLive never gated on the flag, so this entry records a decision and its guard rather than a behaviour change.",
+      "confidence_note": "Two independent projects (Herald, AltBeacon) report the false negative; Nearby never gated on the flag, so this entry records a decision and its guard rather than a behaviour change.",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=advertising-multi-adv-flag-not-trusted",
       "legacy_switches": [],
@@ -8539,7 +8539,7 @@
       "fallback": "Only a reported failed update (0x23, 0x3B...) re-issues the request, as today.",
       "evidence": ["none: LeConnectionPriorityKeeper logs show failed updates (0x23/0x3B), not silent reverts"],
       "confidence": "MEDIUM",
-      "confidence_note": "Three independent reports and AOSP behaviour support the revert; whether MeshLive links revert after its own request (it already requests after discovery) is unmeasured, and the DCK/BALANCED experiments change the interval on purpose.",
+      "confidence_note": "Three independent reports and AOSP behaviour support the revert; whether Nearby links revert after its own request (it already requests after discovery) is unmeasured, and the DCK/BALANCED experiments change the interval on purpose.",
       "reviewed": "2026-10-14",
       "off_switch": "test_device_policy_off=le-priority-interval-reassert",
       "legacy_switches": [],

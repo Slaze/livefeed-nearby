@@ -19,7 +19,7 @@
 
     <!-- iPhone discovery (CompactDiscoveryAnnouncement.kt, phone test T8) -->
     <string name="feat_iphone_discovery">Find iPhones</string>
-    <string name="feat_iphone_discovery_description">Also look for the short announcement an iPhone sends while its MeshLive app is open, so iPhone callers, viewers and streams appear in the lists. Searching uses one more scan filter. An iPhone whose app is in the background cannot be found. Your own announcement and every security check stay the same.</string>
+    <string name="feat_iphone_discovery_description">Also look for the short announcement an iPhone sends while its Nearby app is open, so iPhone callers, viewers and streams appear in the lists. Searching uses one more scan filter. An iPhone whose app is in the background cannot be found. Your own announcement and every security check stay the same.</string>
 
     <!-- Share app nearby (OfflineAppShare.kt, phone test T9) -->
     <string name="feat_share_app_nearby">Show Share app nearby in Help</string>

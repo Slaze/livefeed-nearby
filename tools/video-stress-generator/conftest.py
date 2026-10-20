@@ -1,1 +1,1 @@
-# Lets "python -m pytest tools" from the MeshLive repository root import the videostress package.
+# Lets "python -m pytest tools" from the Nearby repository root import the videostress package.

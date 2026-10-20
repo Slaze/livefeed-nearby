@@ -2042,13 +2042,14 @@ class MainActivity : AppCompatActivity() {
             // (they always carry extras), never on recreation.
             val onboarding = shouldShowOnboarding(
                 OnboardingActivity.isDone(this),
-                launchHasExtras = intent.extras?.isEmpty == false,
+                launchHasExtras = LiveFeedHostLaunch.launchHasNonHostExtras(intent.extras?.keySet()),
                 recreated = savedInstanceState != null,
             )
             // The Live tab (the stream browser) is the landing screen; its scan and the permission
             // prompts wait for the first-run explanation.
             showReceiverBrowser(askPermissions = !onboarding)
             if (onboarding) startActivity(Intent(this, OnboardingActivity::class.java))
+            applyLiveFeedHostScreen(intent)
         }
         // A launch with benchmark/control extras is automation: do not show onboarding later.
         if (intent.extras?.keySet()?.any { it.startsWith("test_") || it == "offline_benchmark" } == true) {
@@ -2796,6 +2797,10 @@ class MainActivity : AppCompatActivity() {
         // Experimental CallStyle Answer (CallNotificationActions); a token-less intent is ignored.
         if (intent.hasExtra(CallNotificationActions.EXTRA_ACTION)) {
             onCallNotificationAction(intent)
+            return
+        }
+        if (applyLiveFeedHostScreen(intent)) {
+            setIntent(intent)
             return
         }
         if (!BuildConfig.DEBUG) return
@@ -4008,6 +4013,22 @@ class MainActivity : AppCompatActivity() {
             mainNav.menu.findItem(itemId)?.isChecked = true
         }
         if (changed) ViewCompat.requestApplyInsets(findViewById(R.id.main))
+    }
+
+    /** LiveFeed Nearby sidecar: open a tab without mixing LiveFeed accounts into the radio. */
+    private fun applyLiveFeedHostScreen(intent: Intent?): Boolean {
+        val screen = LiveFeedHostLaunch.screenFor(
+            intent?.action,
+            intent?.getStringExtra(LiveFeedHostLaunch.EXTRA_OPEN_SCREEN),
+        ) ?: return false
+        when (screen) {
+            LiveFeedHostLaunch.Screen.LIVE -> {
+                if (appScreen != AppScreen.RECEIVER_BROWSER) showReceiverBrowser()
+            }
+            LiveFeedHostLaunch.Screen.CALLS -> showCallsNearby()
+            LiveFeedHostLaunch.Screen.CONTACTS -> showContactsTab()
+        }
+        return true
     }
 
     /** Calls > Nearby: everyone in range now, discovery running. */

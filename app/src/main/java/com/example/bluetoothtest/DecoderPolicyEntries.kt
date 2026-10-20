@@ -138,7 +138,7 @@ internal object DecoderPolicyEntries {
             "decision is unit-tested and the rebuild path is the one used for decoder changes"),
         confidence = MEDIUM,
         confidenceNote = "Google ships the workaround (b/362904942), so the defect exists; Media3 names exactly avc, hevc and " +
-            "vp9 and only with a video sink, so every other c2.mtk. decoder (c2.mtk.av1.decoder) is an extension of the prefix rule. Whether MeshLive's TextureView " +
+            "vp9 and only with a video sink, so every other c2.mtk. decoder (c2.mtk.av1.decoder) is an extension of the prefix rule. Whether Nearby's TextureView " +
             "recovery path is hit is unmeasured. A rebuild is about 100-300 ms slower, only on matched components.",
         reviewed = REVIEWED,
         origin = "Family backlog D-01 (codec-background A6); VideoStreamDecoder.restartAtRecoveryKeyFrame called flush()",
@@ -237,7 +237,7 @@ internal object DecoderPolicyEntries {
         sourceStatus = PARTIAL,
         evidence = listOf("none: Experimental; evidence in the sources is AVC/HEVC, VP9/AV1 unconfirmed"),
         confidence = LOW,
-        confidenceNote = "large low-latency clients use these keys, but MeshLive's streams have no B-frames and are " +
+        confidenceNote = "large low-latency clients use these keys, but Nearby's streams have no B-frames and are " +
             "AV1/VP9, where the reorder delay these keys remove is smaller; the benefit is unmeasured",
         reviewed = REVIEWED,
         origin = "Family backlog D-03 (codec-background A7/A30/A31, workaround list L-3..L-10)",
@@ -260,7 +260,7 @@ internal object DecoderPolicyEntries {
         sourceStatus = PARTIAL,
         evidence = listOf("none: Experimental"),
         confidence = MEDIUM,
-        confidenceNote = "priority alone is risk-free in Media3's decoder format; its latency effect on MeshLive is unmeasured",
+        confidenceNote = "priority alone is risk-free in Media3's decoder format; its latency effect on Nearby is unmeasured",
         reviewed = REVIEWED,
         origin = "Family backlog D-04 (workaround list A-7b)",
         proposed = true,
@@ -277,7 +277,7 @@ internal object DecoderPolicyEntries {
         component = CodecComponentMatcher(prefixes = setOf("c2.mtk.", "OMX.MTK.")),
         effects = emptyList(),
         behaviour = "Reports phones with a MediaTek decoder. MediaTek decoders may return a default crop Rect (for " +
-            "example 0,0,318,238) and output presentation timestamps of -1 or 0. MeshLive already reads the " +
+            "example 0,0,318,238) and output presentation timestamps of -1 or 0. Nearby already reads the " +
             "crop-left/right/top/bottom integers (decodedOutputSize) and ignores a 0x0 output size; the output " +
             "timestamp guard (match decoder output to input by PTS) has no effect yet.",
         sources = listOf(MOZILLA_MTK_CROP),
@@ -299,7 +299,7 @@ internal object DecoderPolicyEntries {
         title = "Tensor G1/G2 AV1 decoder mislabels BT709 as BT601; Pixel SMPTE-432 tags (proposal)",
         matcher = DeviceMatcher(socFamilies = setOf(SocFamily.TENSOR), sdkMin = 33),
         effects = emptyList(),
-        behaviour = "Reports Tensor phones on API 33+. If enabled, MeshLive would ignore the decoder-reported colour " +
+        behaviour = "Reports Tensor phones on API 33+. If enabled, Nearby would ignore the decoder-reported colour " +
             "standard and treat the stream as BT.709, which the encoder declares. The matcher is a superset " +
             "(SoC family Tensor); Gecko's rule is SOC_MODEL exactly Tensor or GS201 for the AV1 mislabel and " +
             "SOC_MANUFACTURER Google with API 34+ for SMPTE-432. The decoder renders to a Surface, so the " +
@@ -308,7 +308,7 @@ internal object DecoderPolicyEntries {
         sourceStatus = PARTIAL,
         evidence = listOf("none: no Pixel among the required phones"),
         confidence = MEDIUM,
-        confidenceNote = "a production fix in Gecko with bug references; unmeasured with MeshLive's encoder tags",
+        confidenceNote = "a production fix in Gecko with bug references; unmeasured with Nearby's encoder tags",
         reviewed = REVIEWED,
         origin = "Family backlog D-08 (workaround list A-3b, F-5, F-6)",
         proposed = true,

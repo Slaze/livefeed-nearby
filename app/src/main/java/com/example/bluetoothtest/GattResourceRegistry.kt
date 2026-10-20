@@ -5,7 +5,7 @@ import android.util.Log
 import java.util.IdentityHashMap
 
 /**
- * Phone-wide GATT resources MeshLive holds (G-02). Each `BluetoothGatt`, each `BluetoothGattServer` and, on Android
+ * Phone-wide GATT resources Nearby holds (G-02). Each `BluetoothGatt`, each `BluetoothGattServer` and, on Android
  * 10-12, each scanner takes one registration from a system-wide pool of 32 (two used by the stack); each GATT client
  * connection takes one of 22 client blocks on Android 10-14. A leaked object keeps its slot until process death
  * (AOSP bt_target.h GATT_MAX_APPS 32, bta_gattc_int.h BTA_GATTC_CL_MAX, bta_gattc_act.cc:277-288). The registry

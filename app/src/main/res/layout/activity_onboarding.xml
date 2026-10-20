@@ -21,7 +21,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_stat_meshlive"
+            android:src="@drawable/ic_stat_nearby"
             app:tint="@color/text_primary" />
 
         <TextView

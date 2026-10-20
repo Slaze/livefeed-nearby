@@ -1,5 +1,5 @@
 name: Device test report
-description: Tell us how MeshLive worked on your phone (reports where everything worked are just as useful).
+description: Tell us how Nearby worked on your phone (reports where everything worked are just as useful).
 title: "[Device] <phone model>, Android <version>"
 labels: ["device-compat", "needs-triage"]
 body:
@@ -8,7 +8,7 @@ body:
       value: |
         Thank you. Reports like this fill in the **Device compatibility** table in docs/DEVICES.md.
 
-        Please answer for **your own phone**, tested with at least one other phone running MeshLive. For each item,
+        Please answer for **your own phone**, tested with at least one other phone running Nearby. For each item,
         choose **Pass** only if it worked for a few minutes without restarting the app or Bluetooth. Choose **Partial**
         if it worked but badly (very slow, frequent freezes, only in some conditions), **Fail** if it did not work,
         and **Not tested** if you did not try it.

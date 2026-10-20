@@ -55,7 +55,7 @@ NATIVE_SOURCES = {
         "marker": ("package_version", 'PACKAGE_VERSION="1.5.2"'),
     },
 }
-STAMP = ".meshlive-source-sha256"
+STAMP = ".nearby-source-sha256"
 
 
 class FetchError(RuntimeError):

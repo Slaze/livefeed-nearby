@@ -138,7 +138,7 @@ internal object CocPolicy {
         effects = listOf(CocAddressTypePrecondition),
         behaviour = "Android 10 does not copy the LE address type into the stack record for a CoC client connect, so " +
             "a CoC connect to an address the stack did not learn in this Bluetooth session never establishes. " +
-            "MeshLive reads the PSM over GATT first, which creates the record. The client logs " +
+            "Nearby reads the PSM over GATT first, which creates the record. The client logs " +
             "BENCHMARK coc_address_precondition and flags a violation so a later refactor cannot break the order. " +
             "Logging only.",
         sources = listOf(
@@ -324,7 +324,7 @@ internal object CocPolicy {
         sourceStatus = PARTIAL,
         evidence = listOf("none: not run on phones"),
         confidence = LOW,
-        confidenceNote = "One mesh app uses the pattern; MeshLive has not measured how often an established CoC socket is unusable.",
+        confidenceNote = "One mesh app uses the pattern; Nearby has not measured how often an established CoC socket is unusable.",
         reviewed = REVIEWED,
         origin = ORIGIN_BATCH_C,
         legacySwitches = listOf("test_coc_echo_verify=true"),

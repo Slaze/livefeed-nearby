@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 import fetch_native_sources as fns
 
-RECIPE = ROOT / "distribution/fdroid/io.github.meshlive.app.yml"
+RECIPE = ROOT / "distribution/fdroid/com.livefeed.nearby.yml"
 
 
 class FdroidRecipeTests(unittest.TestCase):
@@ -81,8 +81,8 @@ class FdroidRecipeTests(unittest.TestCase):
     def test_binaries_never_name_the_github_flavour_assets(self):
         for line in self.text.splitlines():
             if "Binaries:" in line:
-                self.assertNotRegex(line, r"MeshLive-%v-[a-z0-9-]+\.apk", line)
-                self.assertNotIn("MeshLive.apk", line)
+                self.assertNotRegex(line, r"Nearby-%v-[a-z0-9-]+\.apk", line)
+                self.assertNotIn("Nearby.apk", line)
 
     def test_no_updater_class_lives_in_the_fdroid_source_set(self):
         fdroid_sources = sorted(p.name for p in (ROOT / "app/src/fdroid").rglob("*.kt"))

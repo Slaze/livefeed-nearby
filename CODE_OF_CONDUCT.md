@@ -63,7 +63,7 @@ reported to the community leaders responsible for enforcement by contacting the
 project maintainers listed in [AUTHORS](AUTHORS) privately through GitHub. If
 nothing else fits, open a private security advisory on this repository (the
 **Security** tab, then **Report a vulnerability**) and say that it is a Code of
-Conduct report, or use the contact method listed on the MeshLive GitHub
+Conduct report, or use the contact method listed on the Nearby GitHub
 organization profile. Please do not report incidents in a public issue or
 discussion. All complaints will be reviewed and investigated promptly and
 fairly.

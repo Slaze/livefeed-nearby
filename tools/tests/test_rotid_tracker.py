@@ -601,7 +601,7 @@ class Adversary(unittest.TestCase):
             with self.assertRaises(ValueError):
                 tracker.main(["--snoop", str(path), "--output", str(TOOLS.parent / "docs" / "x")])
 
-    def test_non_meshlive_traffic_is_ignored_and_counted(self):
+    def test_non_nearby_traffic_is_ignored_and_counted(self):
         snoop = rotation(self.RDI, self.ADDR, call_offer)
         for i in range(50):
             snoop.add(BASE + 10 + i, legacy_event("40:00:00:00:00:%02x" % (i % 5), ad(0x01, b"\x06") + ad(0x09, b"Watch"), 0))

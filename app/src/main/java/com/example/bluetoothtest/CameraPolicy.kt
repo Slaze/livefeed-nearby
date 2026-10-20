@@ -404,7 +404,7 @@ internal object CameraPolicy {
         sourceStatus = PARTIAL,
         evidence = listOf("none: the Encoder clock log line shows the offset per run"),
         confidence = MEDIUM,
-        confidenceNote = "CameraX lists Samsung HARDWARE qcom (every Samsung Snapdragon phone); MeshLive's existing offset " +
+        confidenceNote = "CameraX lists Samsung HARDWARE qcom (every Samsung Snapdragon phone); Nearby's existing offset " +
             "check probably already covers it, which the Encoder clock lines of a Snapdragon Samsung would confirm",
         reviewed = REVIEWED,
         origin = "Device-family backlog V-18",

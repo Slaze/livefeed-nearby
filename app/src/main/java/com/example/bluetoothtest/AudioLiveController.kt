@@ -181,13 +181,13 @@ class AudioLiveController(
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
         val notification = NotificationCompat.Builder(activity, AudioLiveNotification.REMINDER_CHANNEL)
-            .setSmallIcon(R.drawable.ic_stat_meshlive)
+            .setSmallIcon(R.drawable.ic_stat_nearby)
             .setContentTitle(activity.getString(R.string.audio_live_reminder_title))
             .setContentText(activity.getString(R.string.audio_live_reminder_text))
             .setContentIntent(open)
             .setAutoCancel(true)
             .addAction(0, activity.getString(R.string.audio_live_notification_stop), AudioLiveNotification.stopIntent(activity))
-            .let { NotificationPrivacy.apply(it, activity, AudioLiveNotification.REMINDER_CHANNEL, NotificationKind.AUDIO_BROADCAST, R.drawable.ic_stat_meshlive, false) }
+            .let { NotificationPrivacy.apply(it, activity, AudioLiveNotification.REMINDER_CHANNEL, NotificationKind.AUDIO_BROADCAST, R.drawable.ic_stat_nearby, false) }
             .build()
         runCatching { manager.notify(AudioLiveNotification.REMINDER_ID, notification) }
     }

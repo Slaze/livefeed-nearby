@@ -19,7 +19,7 @@ from pathlib import Path
 from benchmark_layout import output_path, resolve
 from device_log_capture import LogCapture, merge_dump
 
-PACKAGE = os.environ.get("MESHLIVE_APP_ID", "io.github.meshlive.app")
+PACKAGE = os.environ.get("NEARBY_APP_ID", "com.livefeed.nearby")
 COMPONENT = f"{PACKAGE}/com.example.bluetoothtest.MainActivity"
 
 

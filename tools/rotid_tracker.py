@@ -2,7 +2,7 @@
 
 Acts as an adversary with one or more passive BLE scanners. Inputs are full-HCI btsnoop files from a
 scanning phone (every LE advertising / scan-response report is extracted: legacy 0x3E/0x02 and extended
-0x3E/0x0D) and/or scanner logcat files with `BENCHMARK adv_address_seen` lines. It decodes the MeshLive
+0x3E/0x0D) and/or scanner logcat files with `BENCHMARK adv_address_seen` lines. It decodes the Nearby
 announcements (22-byte v2/v5, compact UUIDs v1/v2, title pages v3, reach pages v4/v6; layouts ported from
 docs/PROTOCOL.md and the Kotlin codecs), builds one "set" per (scanner, address, role identity), and links
 sets across the declared UTC epoch boundaries by every field that repeats: address, RDI/prefix, route
@@ -23,7 +23,7 @@ exposure exists, UNMEASURED when fewer than --min-boundaries boundaries were obs
 PASS. Documented allowed (default): logical_stream_token. Everything else that the tool measures but that
 PROTOCOL lists as a stated residual (stream title, capability bits, continuity, timing) is reported as a
 residual category and never silently counted as passed. Streaming: one pass over each btsnoop, memory is
-bounded per MeshLive address. Nothing here talks to a phone.
+bounded per Nearby address. Nothing here talks to a phone.
 
 Usage (the phone lane):
   python -B tools/rotid_tracker.py --snoop S22=<run>/physical/s22/hci/btsnoop_hci.log \\
@@ -401,7 +401,7 @@ MAX_PAYLOADS_PER_ADDRESS = 256
 MAX_GAPS_PER_ADDRESS = 4096
 
 
-def looks_meshlive(data: bytes) -> bool:
+def looks_nearby(data: bytes) -> bool:
     """Cheap pre-filter, then the exact test: app service UUID, mesh manufacturer 0xFFFF or a compact UUID."""
     if not (APP_SERVICE_LE in data or b"\xff\xff\xff" in data or b"\xd6\xc8" in data):
         return False
@@ -417,13 +417,13 @@ def looks_meshlive(data: bytes) -> bool:
 
 
 class Collector:
-    """One scanner's streaming aggregate of MeshLive addresses."""
+    """One scanner's streaming aggregate of Nearby addresses."""
 
     def __init__(self, label: str, offset_s: float, t_from: float | None, t_to: float | None):
         self.label, self.offset, self.t_from, self.t_to = label, offset_s, t_from, t_to
         self.tracks: dict[tuple, Track] = {}
         self.cache: dict[bytes, bool] = {}
-        self.reports = self.meshlive_reports = self.other_reports = 0
+        self.reports = self.nearby_reports = self.other_reports = 0
         self.first_ts = self.last_ts = None
 
     def add(self, report: Report):
@@ -440,12 +440,12 @@ class Collector:
             if verdict is None:
                 if len(self.cache) > 20000:
                     self.cache.clear()
-                verdict = self.cache[report.data] = looks_meshlive(report.data)
+                verdict = self.cache[report.data] = looks_nearby(report.data)
             if not verdict:
                 self.other_reports += 1
                 return
             track = self.tracks[key] = Track(ts)
-        self.meshlive_reports += 1
+        self.nearby_reports += 1
         track.count += 1
         track.last = ts
         if report.tx_power is not None:
@@ -1115,11 +1115,11 @@ def analyse(args) -> dict:
         collector = collectors.get(label)
         if collector is None:
             collector = collectors[label] = Collector(label, offsets.get(label, 0.0), t_from, t_to)
-        before = (collector.reports, collector.meshlive_reports, collector.other_reports)
+        before = (collector.reports, collector.nearby_reports, collector.other_reports)
         for ts, payload in iter_btsnoop(path, summary):
             for report in parse_event(payload, ts):
                 collector.add(report)
-        summary.update(reports=collector.reports - before[0], meshlive_reports=collector.meshlive_reports - before[1],
+        summary.update(reports=collector.reports - before[0], nearby_reports=collector.nearby_reports - before[1],
                        other_reports=collector.other_reports - before[2],
                        first_utc=utc(collector.first_ts), last_utc=utc(collector.last_ts),
                        clock_offset_s=offsets.get(label, 0.0))
@@ -1127,7 +1127,7 @@ def analyse(args) -> dict:
     scanners = []
     for label, collector in collectors.items():
         found = tracks_to_segs(collector, args.ngram)
-        scanners.append({"label": label, "meshlive_addresses": len(collector.tracks), "sets": len(found)})
+        scanners.append({"label": label, "nearby_addresses": len(collector.tracks), "sets": len(found)})
         for item in inputs:
             if item["label"] == label and item["kind"] == "btsnoop":
                 item["sets"] = len(found)
@@ -1200,7 +1200,7 @@ def analyse(args) -> dict:
         reasons.append("blocking carry-over: " + ", ".join(f"{c} x{n}" for c, n in sorted(counts.items())))
     elif measured < args.min_boundaries:
         verdict = "UNMEASURED"
-        reasons.append(f"{measured} boundary/boundaries observed with MeshLive sets on both sides; need {args.min_boundaries}")
+        reasons.append(f"{measured} boundary/boundaries observed with Nearby sets on both sides; need {args.min_boundaries}")
     else:
         verdict = "PASS"
         reasons.append(f"no field repeats across {measured} measured boundary/boundaries (documented allowed: {', '.join(sorted(allowed))})")
@@ -1256,7 +1256,7 @@ def markdown(result: dict) -> str:
     lines.append("## Inputs")
     for item in result["inputs"]:
         lines.append(f"- {item['label']} ({item['kind']}) sha256 {str(item.get('sha256'))[:16]}: "
-                     f"{item.get('meshlive_reports', item.get('sightings', 0))} MeshLive reports, {item['sets']} sets, "
+                     f"{item.get('nearby_reports', item.get('sightings', 0))} Nearby reports, {item['sets']} sets, "
                      f"{item.get('first_utc')} to {item.get('last_utc')}")
     lines += ["", "## Blocking findings"]
     blocking = [f for f in result["findings"] if f["disposition"] == BLOCKING]

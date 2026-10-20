@@ -252,8 +252,8 @@ li{margin-bottom:8px}
 <p>File SHA-256:<br><code>${e(info.apkSha256)}</code></p>
 <p>Signing certificate SHA-256:<br>$certs</p>
 <p>${e(keyNote)} After installing, About in the app shows the signing certificate; it must match the one above.</p>
-<p>This page is written by the phone that shares it, so it can say anything. Compare the certificate above with the one on the project page (github.com/MeshLive/meshlive-android) before you install.</p>
-<p><b>Already have MeshLive?</b> Do not open the file from here. In MeshLive open Settings &gt; Features &gt; Updates and tap Choose the file: MeshLive checks it first. If Android offers to Install a new app instead of Update, cancel.</p>
+<p>This page is written by the phone that shares it, so it can say anything. Compare the certificate above with the one on the project page (github.com/Slaze/livefeed-nearby) before you install.</p>
+<p><b>Already have Nearby?</b> Do not open the file from here. In Nearby open Settings &gt; Features &gt; Updates and tap Choose the file: Nearby checks it first. If Android offers to Install a new app instead of Update, cancel.</p>
 </body></html>
 """
     }

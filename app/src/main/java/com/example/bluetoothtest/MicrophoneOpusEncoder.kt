@@ -764,7 +764,7 @@ class MicrophoneOpusEncoder(
      * AcousticEchoCanceler.isAvailable()). Each effect's default state (read BEFORE it is enabled), descriptor
      * UUID, implementor, control ownership, setEnabled status and final state go to the `BENCHMARK audio_capture`
      * line (`effectState=`; `effects=` keeps its former format), so per-OEM behaviour is evidence, not an
-     * assumption. No effect is ever switched off here, and the AOSP software AEC stays enabled: MeshLive has no
+     * assumption. No effect is ever switched off here, and the AOSP software AEC stays enabled: Nearby has no
      * echo canceller of its own (WebRTC skips that effect only because it ships a better one; question Q-N4).
      */
     private fun enableCallAudioEffects(audioSessionId: Int) {

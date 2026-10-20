@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicReference
  * (Experimental `test_connect_gatt_main`): the call is posted to the main looper and the caller waits for the result on
  * its own thread, never blocking the main thread. Reports of Huawei P20 Lite (Android-BLE-Library#159: no callback
  * unless `connectGatt` runs on the main thread), Gadgetbridge ("main thread appears to fix Samsung") and Berty (posts
- * connectGatt to a main handler under a 15 s timer) motivate the arm; it is unmeasured on the MeshLive phones.
+ * connectGatt to a main handler under a 15 s timer) motivate the arm; it is unmeasured on the Nearby phones.
  *
  * Every client created here is entered in the [GattResourceRegistry] (owner, peer) with a closer, so a leaked client
  * shows in the counts and an exhausted pool can close idle ones. [GattClientTeardown] releases it on close.

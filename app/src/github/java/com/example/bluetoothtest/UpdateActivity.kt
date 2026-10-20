@@ -21,11 +21,11 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Updates (github flavour). Two ways to a newer MeshLive, one install path:
+ * Updates (github flavour). Two ways to a newer Nearby, one install path:
  *
  * - from the release page: "Check now" and "Download" ask GitHub (only after the user opted in);
  * - from a nearby phone: the user picks the APK that arrived any way (Share app nearby, Quick Share, a
- *   file manager) and MeshLive verifies it before offering to install it.
+ *   file manager) and Nearby verifies it before offering to install it.
  *
  * Whatever the source, [UpdateEngine] copies the file into the app's private directory, verifies it
  * ([UpdateVerifier]) and writes exactly those bytes into a PackageInstaller session; Android then

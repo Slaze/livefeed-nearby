@@ -4,7 +4,7 @@
 Full run (local, needs the signing key outside the repo):
     python tools/make_release.py [--no-universal] [--force]
 
-Writes release/<versionName>-<versionCode>/ with MeshLive-<versionName>-<abi>.apk for arm64-v8a and
+Writes release/<versionName>-<versionCode>/ with Nearby-<versionName>-<abi>.apk for arm64-v8a and
 armeabi-v7a (plus -universal unless --no-universal), SHA256SUMS, signing-cert.sha256, apksigner-certs.txt,
 RELEASE-NOTES.md (a template to finish by hand) and SOURCE-MANIFEST.txt. Nothing is uploaded or pushed.
 
@@ -34,7 +34,7 @@ EXPECTED_CERT_SHA256 = ("2E:EF:C0:5A:44:45:22:52:9D:9F:75:D7:EB:CE:FD:08:"
                         "86:47:07:F2:1A:79:04:1D:B5:1E:BF:F8:36:49:E2:13")
 MANIFEST_NAME = "SOURCE-MANIFEST.txt"
 # RENAME POINT 2 of 2 (the other is `appId` in app/build.gradle.kts): the release file prefix.
-RELEASE_BASENAME = "MeshLive"
+RELEASE_BASENAME = "Nearby"
 LICENSE_ID = "GPL-3.0-or-later"
 # Per-ABI versionCode = versionCode * 10 + digit; must equal app/build.gradle.kts `abiVersionDigits` (checked
 # against Gradle's output-metadata.json on every release). The universal APK is digit 0.
@@ -274,10 +274,7 @@ def apk_file_name(version_name, apk):
     return f"{RELEASE_BASENAME}-{version_name}-{apk['abi']}.apk"
 
 
-STABLE_APK_NAME = "MeshLive.apk"
-
-
-STABLE_APK_NAME = "MeshLive.apk"
+STABLE_APK_NAME = "Nearby.apk"
 
 
 def sha256sums_text(entries):
@@ -402,7 +399,7 @@ def make_release(root, out_base=None, expected=EXPECTED_CERT_SHA256, runner=run,
         digest = sha256_file(out_dir / name)
         entries.append((name, digest))
         rows.append((name, apk["abi"], apk["versionCode"], digest))
-    # Stable alias of the arm64-v8a APK: README's download button links releases/latest/download/MeshLive.apk.
+    # Stable alias of the arm64-v8a APK: README's download button links releases/latest/download/Nearby.apk.
     arm64_name = apk_file_name(version[0], next(a for a in apks if a["abi"] == "arm64-v8a"))
     (out_dir / STABLE_APK_NAME).write_bytes((out_dir / arm64_name).read_bytes())
     entries.append((STABLE_APK_NAME, sha256_file(out_dir / STABLE_APK_NAME)))

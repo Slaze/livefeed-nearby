@@ -194,7 +194,7 @@ internal object ScanPolicy {
         sourceStatus = OFFICIAL,
         evidence = listOf(
             "lane11 ASUS (Android 11, SDK 30, patch 2021-06-01): `dumpsys bluetooth_manager` GATT Scanner Map lists 25 'Ongoing scans' for " +
-                "io.github.meshlive.app (1583 started / 1558 stopped) back to 10-12 and the 32-slot pool full (`MAX client reached: 32`); the three " +
+                "com.livefeed.nearby (1583 started / 1558 stopped) back to 10-12 and the 32-slot pool full (`MAX client reached: 32`); the three " +
                 "ongoing starts inside the saved logs match, to the second, the first scan of a process the lane driver force-killed " +
                 "(benchmarks/runs/lane11-stats-20261015/m-asus-btmgr). Intermittent: 3 of about 77 force-killed processes in the saved lane11 ASUS logs leaked.",
         ),

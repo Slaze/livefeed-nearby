@@ -59,7 +59,7 @@ internal class ReachAdvertiser(
         handler.post(::tick)
     }
 
-    /** One callback per set: remembers whether the stack confirmed it, and whether MeshLive asked for its stop. */
+    /** One callback per set: remembers whether the stack confirmed it, and whether Nearby asked for its stop. */
     private inner class ReachSetCallback(val ownedBefore: Int) : AdvertisingSetCallback() {
         @Volatile var startedOk = false
         @Volatile var stopRequested = false
@@ -98,7 +98,7 @@ internal class ReachAdvertiser(
             deadByStack = true
             budget.noteStopped(this)
             if (stopRequested || closed.get() || !startedOk) return
-            // The stack dropped a set MeshLive did not stop: the page tick starts a new one after the back-off.
+            // The stack dropped a set Nearby did not stop: the page tick starts a new one after the back-off.
             if (callbacks.remove(this) && callbacks.isEmpty()) set = null
             val now = android.os.SystemClock.elapsedRealtime()
             when (val decision = watchdog.onUnexpectedStop()) {

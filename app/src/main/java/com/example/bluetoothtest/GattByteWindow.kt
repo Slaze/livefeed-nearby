@@ -11,10 +11,10 @@ import java.util.concurrent.TimeUnit
  * 100-300 kbps, and past it the stack drops silently. Waiting for the callback therefore bounds the call count, not the
  * bytes queued ahead of the next packet.
  *
- * The window bounds the bytes MeshLive keeps in that queue. With a drain model (`test_gatt_window_kbps` or a rate
+ * The window bounds the bytes Nearby keeps in that queue. With a drain model (`test_gatt_window_kbps` or a rate
  * provider) the queue estimate is a leaky bucket: bytes added on each send, drained at the modelled link rate with
  * elapsed time. Without one the estimate falls back to bytes sent and not yet reported by the stack's callback, which
- * for MeshLive's one-packet-at-a-time senders never exceeds a packet and only yields the diagnostic peak.
+ * for Nearby's one-packet-at-a-time senders never exceeds a packet and only yields the diagnostic peak.
  *
  * Off by default: the drain rate of a link is not observable from the app, and a wrong model either starves a healthy
  * link or does nothing. The window is a switchable measurement tool, not a proven fix.

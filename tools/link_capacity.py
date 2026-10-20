@@ -28,7 +28,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from android_tools import default_adb  # noqa: E402
 
-PACKAGE = os.environ.get("MESHLIVE_APP_ID", "io.github.meshlive.app")
+PACKAGE = os.environ.get("NEARBY_APP_ID", "com.livefeed.nearby")
 COMPONENT = f"{PACKAGE}/com.example.bluetoothtest.MainActivity"
 DEFAULT_ADB = default_adb()
 FINAL = re.compile(r"BluetoothVideo: (.*\bFINAL ([0-9.]+) Mbps.*)")

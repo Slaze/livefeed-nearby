@@ -3,7 +3,7 @@
 <resources>
     <!-- Settings > Features (off until the phone tests pass) -->
     <string name="feat_audio_live">Audio-only live</string>
-    <string name="feat_audio_live_description">Go live with sound only, and listen to others who do. Audio uses far less Bluetooth capacity than video, reaches more phones and keeps playing with the screen off. Anyone nearby with MeshLive can listen, including phones that pass it on.</string>
+    <string name="feat_audio_live_description">Go live with sound only, and listen to others who do. Audio uses far less Bluetooth capacity than video, reaches more phones and keeps playing with the screen off. Anyone in range who has this app can listen, including phones that pass it on.</string>
 
     <!-- Go live choice -->
     <string name="go_live_choice_title">Go live</string>
@@ -40,7 +40,7 @@
     <!-- Listening screen and Watch rows -->
     <string name="audio_live_listen_title">Radio</string>
     <string name="audio_live_listen_meter_description">Sound level</string>
-    <string name="audio_live_listen_info">Anyone nearby with MeshLive can listen, including phones that pass it on. Titles from people you have not verified are unconfirmed. Volume is your phone\'s media volume.</string>
+    <string name="audio_live_listen_info">Anyone in range who has this app can listen, including phones that pass it on. Titles from people you have not verified are unconfirmed. Volume is your phone\'s media volume.</string>
     <string name="audio_live_listen_mute">Mute</string>
     <string name="audio_live_listen_unmute">Unmute</string>
     <string name="audio_live_listen_stop">Stop</string>
@@ -65,7 +65,7 @@
 
     <!-- Disclosure shown before the first broadcast -->
     <string name="audio_live_disclosure_title">Before you go live</string>
-    <string name="audio_live_disclosure_message">Anyone nearby with MeshLive can listen, including phones that pass it on. Titles from people you have not verified show as unconfirmed.\n\nListeners can tell it is your phone: until streams use a throwaway identity, everyone who joins learns your phone\'s long-term identity key and can link broadcasts from different days to it.</string>
+    <string name="audio_live_disclosure_message">Anyone in range who has this app can listen, including phones that pass it on. Titles from people you have not verified show as unconfirmed.\n\nListeners can tell it is your phone: until streams use a throwaway identity, everyone who joins learns your phone\'s long-term identity key and can link broadcasts from different days to it.</string>
     <string name="audio_live_disclosure_confirm">Go live with audio</string>
 
     <!-- Notification (broadcaster; lock-screen text stays neutral) -->

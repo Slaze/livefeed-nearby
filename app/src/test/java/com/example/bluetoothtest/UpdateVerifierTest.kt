@@ -22,7 +22,7 @@ class UpdateVerifierTest {
     private val fingerprintB = "7E:55:D0:81:7E:7C:76:DD:9D:0D:C7:E1:89:28:CE:59:83:48:4C:9E:BE:A7:00:91:58:07:9E:5C:FB:93:09:7F"
     private val release = AppSharePolicy.PUBLISHED_RELEASE_CERT_SHA256
 
-    private val pkg = "io.github.meshlive.app"
+    private val pkg = "com.livefeed.nearby"
 
     private fun installed(code: Long = 12, signer: String = release) = InstalledFacts(pkg, code, listOf(signer))
 

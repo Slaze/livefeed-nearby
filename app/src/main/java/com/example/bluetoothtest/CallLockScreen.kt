@@ -155,7 +155,7 @@ internal class CallLockScreen(private val activity: Activity) {
         val fullScreenAllowed = FullScreenIntentAccess.canUse(activity)
         val lockScreenNames = NotificationPrivacy.showPeerNames(activity)
         val notification = NotificationCompat.Builder(activity, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stat_meshlive)
+            .setSmallIcon(R.drawable.ic_stat_nearby)
             .setContentTitle("Incoming encrypted call")
             .setContentText(NotificationPrivacy.incomingCallText(peerLabel))
             .setCategory(NotificationCompat.CATEGORY_CALL)
@@ -174,7 +174,7 @@ internal class CallLockScreen(private val activity: Activity) {
                     activity,
                     CHANNEL_ID,
                     NotificationKind.INCOMING_CALL,
-                    R.drawable.ic_stat_meshlive,
+                    R.drawable.ic_stat_nearby,
                     lockScreenNames,
                 )
             }

@@ -2,7 +2,9 @@
 
 *Engineering log for contributors: the measured reasons behind the app's behaviour. You do not need it to use or build the app.*
 
-This file records why MeshLive behaves the way it does: which behaviour was kept, changed or left experimental, and the measurements behind each choice, so a later change can challenge them with evidence. The raw benchmark evidence (recordings, logs, traces) is not stored in this repository; only the conclusions and the numbers that support them are kept here. The numbers come from the project's own reference phones and are engineering measurements, not certification: they never approve another build, phone, input or topology. Case state and freshness are tracked by the test harness (see [TESTING.md](TESTING.md)).
+This fork ships as **Nearby** (`com.livefeed.nearby`). The measurements below were made on upstream MeshLive phones and still apply to this radio; product names in historical entries are left as written.
+
+This file records why the radio behaves the way it does: which behaviour was kept, changed or left experimental, and the measurements behind each choice, so a later change can challenge them with evidence. The raw benchmark evidence (recordings, logs, traces) is not stored in this repository; only the conclusions and the numbers that support them are kept here. The numbers come from the project's own reference phones and are engineering measurements, not certification: they never approve another build, phone, input or topology. Case state and freshness are tracked by the test harness (see [TESTING.md](TESTING.md)).
 
 Every phone uses the same acceptance standard. A regression seen on one device is evidence for the capability or stack behaviour it implicates, not a special pass standard. Reference phones: S24 (SM-S921B), S22 (SM-S901E), M31 (SM-M315F), A55 (SM-A556E), ASUS (ASUS_I01WD), Xiaomi (Redmi 23053RN02I) and A15s (OPPO CPH2179). A historical Redmi and the later Xiaomi are different devices. Build identifiers such as `2cbdafb1` are short hashes of frozen test builds.
 

@@ -30,7 +30,7 @@ internal data object AdvertisingStuckReport : DevicePolicyEffect {
 }
 
 internal data object AdvertisingLegacyPayloadCap : DevicePolicyEffect {
-    override fun describe(): String = "every MeshLive legacy advertisement fits the 28-byte connectable budget of Android 13 and below"
+    override fun describe(): String = "every Nearby legacy advertisement fits the 28-byte connectable budget of Android 13 and below"
 }
 
 internal data object AdvertisingIgnoreMultiAdvFlag : DevicePolicyEffect {
@@ -67,7 +67,7 @@ internal object AdvertisingPolicy {
         effects = listOf(AdvertisingNonThrowingStart),
         behaviour = "startAdvertisingSet validates synchronously: an oversize legacy payload or an unsupported parameter " +
             "throws IllegalArgumentException, and a start while the adapter is off or turning off throws " +
-            "IllegalStateException (BT Adapter is not turned ON). Every MeshLive advertising start (stable offer and " +
+            "IllegalStateException (BT Adapter is not turned ON). Every Nearby advertising start (stable offer and " +
             "discovery sets, title and reach pages, the capacity probe) now turns those into a failure status the " +
             "callers already handle, so a delayed restart cannot end the process. One callback object serves one " +
             "set, and the stable set is started with duration 0 and no event limit so the stack re-enables it after " +
@@ -98,7 +98,7 @@ internal object AdvertisingPolicy {
         matcher = DeviceMatcher(),
         effects = listOf(AdvertisingBudgetLearning),
         behaviour = "The number of advertising instances is whatever the controller reports (the CDD only says SHOULD 4, " +
-            "a cheap controller can offer one) and every app and the system share it, so it cannot be read. MeshLive " +
+            "a cheap controller can offer one) and every app and the system share it, so it cannot be read. Nearby " +
             "learns it: a refusal with TOO_MANY_ADVERTISERS while it owns n sets means the budget is n now (kept five " +
             "minutes). With a short budget the reach and title sets do not start (they need one instance plus one spare), " +
             "and a refused session-critical set (the stream's own advertisement) first stops the title set, then the " +
@@ -132,7 +132,7 @@ internal object AdvertisingPolicy {
         title = "A stable advertising set that stops unexpectedly is restarted",
         matcher = DeviceMatcher(),
         effects = listOf(AdvertisingSetRestart),
-        behaviour = "If the stack reports the stable set stopped (onAdvertisingSetStopped) without MeshLive asking, or reports " +
+        behaviour = "If the stack reports the stable set stopped (onAdvertisingSetStopped) without Nearby asking, or reports " +
             "it disabled and does not enable it again within 4 s (the stack itself disables a connectable set for an " +
             "instant to rotate its address every 7 to 15 minutes), the set is started again as a new set (new address) " +
             "with back-off 1, 2, 4, 8, 16 s and at most five restarts in ten minutes; then the owner's own lost-handling " +
@@ -165,10 +165,10 @@ internal object AdvertisingPolicy {
         title = "'No free advertising slots although none are ours' is detected and reported",
         matcher = DeviceMatcher(),
         effects = listOf(AdvertisingStuckReport),
-        behaviour = "Two TOO_MANY_ADVERTISERS refusals while MeshLive owns no advertising set mean other apps, or a leaked " +
+        behaviour = "Two TOO_MANY_ADVERTISERS refusals while Nearby owns no advertising set mean other apps, or a leaked " +
             "stack, hold every instance. Reports on Redmi, Mi 11 Lite, Galaxy A54 and Oppo phones say this persists until " +
             "the phone restarts, and Android 15's advertising manager leaks a slot when an address update meets a set " +
-            "removal. MeshLive says so in plain words and names the remedy (turn Bluetooth off and on; restart the phone) " +
+            "removal. Nearby says so in plain words and names the remedy (turn Bluetooth off and on; restart the phone) " +
             "through the status line and BENCHMARK adv_budget stuck, and exposes the state to the reliability banner. " +
             "It does not toggle Bluetooth. Off: the start fails with its status only.",
         sources = listOf(
@@ -197,7 +197,7 @@ internal object AdvertisingPolicy {
         effects = listOf(AdvertisingLegacyPayloadCap),
         behaviour = "Android 13 and below charge a connectable legacy advertisement the 3-byte Flags field, leaving 28 bytes " +
             "of primary data; Android 14 charges it only when the set is also discoverable (31 bytes for the hidden-name " +
-            "sets). The same payload that starts on Android 14 fails with DATA_TOO_LARGE on Android 12/13. MeshLive's " +
+            "sets). The same payload that starts on Android 14 fails with DATA_TOO_LARGE on Android 12/13. Nearby's " +
             "connectable primary data is one 128-bit service UUID (18 bytes) and every manufacturer-data page is in " +
             "the scan response (31 bytes, never charged flags); a unit test checks the largest announcement, title, " +
             "reach and name page against the smaller budget, and a DEBUG line logs the sizes at each start. " +
@@ -228,7 +228,7 @@ internal object AdvertisingPolicy {
         matcher = DeviceMatcher(),
         effects = listOf(AdvertisingIgnoreMultiAdvFlag),
         behaviour = "BluetoothAdapter.isMultipleAdvertisementSupported() returns false on phones where advertising works " +
-            "(Galaxy S20 Exynos), and is true only above a controller-reported instance threshold. MeshLive reads it for " +
+            "(Galaxy S20 Exynos), and is true only above a controller-reported instance threshold. Nearby reads it for " +
             "logging only (adv_set_probe, support bundle) and decides from actual start results: the budget is learned by " +
             "starting sets. A source test keeps the flag out of the advertising code's decisions.",
         sources = listOf(
@@ -240,7 +240,7 @@ internal object AdvertisingPolicy {
         sourceStatus = PARTIAL,
         evidence = listOf("none"),
         confidence = MEDIUM,
-        confidenceNote = "Two independent projects (Herald, AltBeacon) report the false negative; MeshLive never gated on the flag, " +
+        confidenceNote = "Two independent projects (Herald, AltBeacon) report the false negative; Nearby never gated on the flag, " +
             "so this entry records a decision and its guard rather than a behaviour change.",
         reviewed = REVIEWED,
         origin = "Device-family backlog (ble-library-trackers.md A11): do not gate advertising on the flag.",

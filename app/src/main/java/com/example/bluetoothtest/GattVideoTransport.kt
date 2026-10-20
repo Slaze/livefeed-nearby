@@ -1236,7 +1236,7 @@ internal data class BusyWriteOutcome(val result: Int, val retries: Int, val wedg
  * What decides a busy answer is a wedged client rather than contention (Android 13-14, registry
  * android13-14-gatt-client-wedged-after-busy). [ownOutstanding]: this client has a write the stack accepted whose callback
  * has not arrived, so the busy flag is its own and waiting for the callback is correct. [otherLocalHolder]: another
- * MeshLive client to the same peer exists and may hold the stack's per-peer write permit, so a short retry is right.
+ * Nearby client to the same peer exists and may hold the stack's per-peer write permit, so a short retry is right.
  * With neither, the BluetoothGatt object itself is stuck (mDeviceBusy never cleared, AOSP cf66648aa2; or a permit leaked
  * by a client that disconnected mid-write, 67158cb957) and no number of retries can succeed.
  */

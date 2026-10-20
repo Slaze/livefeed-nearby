@@ -1,4 +1,4 @@
-"""Build and screen the names-v2 word lists (MeshLive Design G, review F23 and the two multilingual reviews of 2026-10-12).
+"""Build and screen the names-v2 word lists (Nearby Design G, review F23 and the two multilingual reviews of 2026-10-12).
 
 names-v1 is frozen and kept (assets/names/*-v1.txt, vector history). names-v2 replaces every word flagged High or Medium by
 EITHER review (the union of the two review files, kept outside the repository), the words

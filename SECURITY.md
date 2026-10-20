@@ -1,12 +1,12 @@
 # Security policy
 
-MeshLive is used where the internet may be down or watched, so a security flaw can matter more than in an ordinary
+Nearby is used where the internet may be down or watched, so a security flaw can matter more than in an ordinary
 app. We take reports seriously, and we would rather hear about a problem privately and fix it than read about it in
 a public issue first.
 
 ## Supported versions
 
-MeshLive is pre-release software. Security fixes go to:
+Nearby is pre-release software. Security fixes go to:
 
 | Version | Supported |
 | --- | --- |
@@ -23,7 +23,7 @@ Until the first release, only `main` exists.
 Report it privately through GitHub Security Advisories:
 
 1. Open the repository's **Security** tab and choose **Report a vulnerability**, or go straight to
-   <https://github.com/MeshLive/meshlive-android/security/advisories/new>.
+   <https://github.com/Slaze/livefeed-nearby/security/advisories/new>.
 2. Describe the problem as described below and submit. Only the maintainers can see the report.
 
 If you cannot use GitHub Security Advisories, open a public issue that says only "security report" with no details,
@@ -86,7 +86,7 @@ Out of scope, with examples:
 - Bluetooth radio facts that the project documents: a nearby listener sees that Bluetooth traffic exists, its timing
   and its size.
 - Denial of service by radio jamming, or by a nearby device that connects and refuses to forward.
-- Findings in third-party components that have no effect on MeshLive (report those upstream).
+- Findings in third-party components that have no effect on Nearby (report those upstream).
 - Reports from automated scanners without a demonstrated impact.
 - Social engineering of maintainers, and spam or abuse in the issue tracker.
 
@@ -132,4 +132,4 @@ of [docs/USER_GUIDE.md](docs/USER_GUIDE.md#verifying-a-release). An APK with a d
 and please tell us where you found it. The signing key lives only on the maintainer's machine; the CI workflow holds
 no signing key and builds no APK.
 
-Thank you for helping keep MeshLive users safe.
+Thank you for helping keep Nearby users safe.

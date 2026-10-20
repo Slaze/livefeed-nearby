@@ -55,7 +55,7 @@ class ActiveVideoSessionService : Service() {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
         val notification = if (audioMode == AudioLiveServiceMode.LISTEN) buildListenNotification(pendingIntent) else NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stat_meshlive)
+            .setSmallIcon(R.drawable.ic_stat_nearby)
             .setContentTitle("Bluetooth video is active")
             .setContentText(
                 NotificationPrivacy.sessionContentText(
@@ -99,7 +99,7 @@ class ActiveVideoSessionService : Service() {
                     this,
                     CHANNEL_ID,
                     if (audioMode == AudioLiveServiceMode.BROADCAST) NotificationKind.AUDIO_BROADCAST else NotificationKind.SESSION,
-                    R.drawable.ic_stat_meshlive,
+                    R.drawable.ic_stat_nearby,
                     peerNamesOptIn = peerName != null && audioMode != AudioLiveServiceMode.BROADCAST &&
                         NotificationPrivacy.showPeerNames(this),
                 )
@@ -190,14 +190,14 @@ class ActiveVideoSessionService : Service() {
      */
     private fun buildListenNotification(contentIntent: PendingIntent): android.app.Notification {
         val publicVersion = android.app.Notification.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stat_meshlive)
+            .setSmallIcon(R.drawable.ic_stat_nearby)
             .setContentTitle(NotificationPrivacy.PUBLIC_TITLE)
             .setContentText(NotificationPrivacy.publicText(NotificationKind.AUDIO_LISTEN))
             .build()
         val style = android.app.Notification.MediaStyle().setShowActionsInCompactView(0, 1)
         AudioLiveMediaSession.token?.let(style::setMediaSession)
         return android.app.Notification.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stat_meshlive)
+            .setSmallIcon(R.drawable.ic_stat_nearby)
             .setContentTitle(getString(R.string.audio_live_notification_listening))
             .setContentIntent(contentIntent)
             .setOngoing(true)

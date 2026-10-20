@@ -32,7 +32,7 @@ internal class GattLinkBudget(
     ) {
         val ceiling: Int get() = minOf(statedCeiling, learnedCeiling ?: statedCeiling)
 
-        /** Links in use: the larger of what the stack reports and what MeshLive itself holds. */
+        /** Links in use: the larger of what the stack reports and what Nearby itself holds. */
         val used: Int get() = maxOf(systemLinks ?: 0, ownLinks)
 
         /** New child links the phone can still take (never negative). */

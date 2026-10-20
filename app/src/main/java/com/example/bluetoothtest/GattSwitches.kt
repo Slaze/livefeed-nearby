@@ -20,7 +20,7 @@ internal object GattSwitches {
 
     /**
      * `test_gatt_busy_wedge` (Experimental, default `legacy`): `recover` classifies a write refused as busy while
-     * MeshLive has nothing in flight on that client as a wedged client and ends the link fast (G-03), with the 25 ms retry
+     * Nearby has nothing in flight on that client as a wedged client and ends the link fast (G-03), with the 25 ms retry
      * step. The root review kept `legacy` (the pre-batch 2 ms spin up to 500 ms, no wedge classification) as the default:
      * the wedge check ends a link on ONE such answer on SDK 33-34 (three of four lane phones), which is not
      * behaviour-safe without a phone A/B under load. DEBUG builds only; release always runs `legacy`.

@@ -38,7 +38,7 @@ internal object GattLinkPolicy {
         effects = listOf(GattLinkSlotLimit(legacyCeiling = GattLinkBudget.LEGACY_CEILING, parentReserve = GattLinkBudget.PARENT_RESERVE)),
         behaviour = "Logging on every phone: the link budget line shows the stack's limit (7 links up to Android 14; " +
             "bluetooth.core.le.max_number_of_concurrent_connections clamped to 8..16 from Android 15), the links the stack " +
-            "reports and MeshLive's own, and how many child slots remain after one slot reserved for the upstream parent. " +
+            "reports and Nearby's own, and how many child slots remain after one slot reserved for the upstream parent. " +
             "A fan-out or relay child past the budget can be refused as \"relay full\" before the stack strands it; that " +
             "refusal is Experimental (test_link_budget_admission, default off) because watches and earbuds hold links " +
             "the app cannot tell from its own. The first unexplained drop of an existing link lowers the budget for the run. " +
@@ -75,7 +75,7 @@ internal object GattLinkPolicy {
         title = "GATT registration pool (32) and client pool (22) are phone-wide",
         matcher = DeviceMatcher(),
         effects = listOf(GattPoolExhaustionGuard(registrationPool = 32, clientPool = 22)),
-        behaviour = "MeshLive counts the BluetoothGatt, BluetoothGattServer and scanner objects it holds per owner, and " +
+        behaviour = "Nearby counts the BluetoothGatt, BluetoothGattServer and scanner objects it holds per owner, and " +
             "classifies a connect that fails with status 257 as \"registration pool exhausted\" and 128 as \"client pool " +
             "exhausted\". Such a failure is not retried in a tight loop: one retry follows only after idle, unused " +
             "clients of this app were closed; then the failure is shown. Six fresh-connect failures across two peers that " +
@@ -120,7 +120,7 @@ internal object GattLinkPolicy {
                 "mClientIf is set by onClientRegistered; close() before it unregisters nothing"),
         ),
         sourceStatus = OFFICIAL,
-        evidence = listOf("none: no saved run shows an early-close leak; frequency depends on how fast MeshLive deadlines fire"),
+        evidence = listOf("none: no saved run shows an early-close leak; frequency depends on how fast Nearby deadlines fire"),
         confidence = HIGH,
         confidenceNote = "Defect and fix are documented; builds carrying the fix (android14-qpr2 and later) only pay a bounded wait that never fires after a callback.",
         reviewed = REVIEWED,
@@ -136,7 +136,7 @@ internal object GattLinkPolicy {
         title = "Android 14 and earlier: a BluetoothGatt that returned busy once can stay busy for ever (Experimental arm: applied only with test_gatt_busy_wedge=recover)",
         matcher = DeviceMatcher(sdkMax = 34),
         effects = listOf(GattClientWedgeRecovery(waitForOtherHolderMs = GattWriteBusyPolicy.OTHER_HOLDER_WAIT_MS, stepMs = GattWriteBusyPolicy.STEP_MS)),
-        behaviour = "MeshLive tracks its own outstanding write on each GATT client. A busy answer (201 on Android 13-14, a bare " +
+        behaviour = "Nearby tracks its own outstanding write on each GATT client. A busy answer (201 on Android 13-14, a bare " +
             "false before API 33) while it has none in flight is not its own flag: the framework already retried 5 x 10 ms, so the client object is stuck " +
             "(mDeviceBusy never cleared, or the per-peer write permit leaked by a client that disconnected mid-write). " +
             "The 2 ms x 500 ms spin cannot succeed then. The link is ended at once with a distinct failure, the client is " +
@@ -177,7 +177,7 @@ internal object GattLinkPolicy {
         title = "A CONNECTED callback can arrive after the client was cancelled",
         matcher = DeviceMatcher(),
         effects = listOf(GattStaleConnectedCleanup),
-        behaviour = "When a CONNECTED callback arrives for a client MeshLive already cancelled, the client is disconnected and " +
+        behaviour = "When a CONNECTED callback arrives for a client Nearby already cancelled, the client is disconnected and " +
             "closed (once; registry-checked) and the callback is otherwise ignored, so a cancelled attempt cannot leave a " +
             "live BluetoothGatt and its registration behind. It fires only on that stale callback.",
         sources = listOf(
@@ -187,9 +187,9 @@ internal object GattLinkPolicy {
                 "Kable cancel race: the connect \"may never start, leaking BluetoothGatt\" (status 133); close on cancel"),
         ),
         sourceStatus = PARTIAL,
-        evidence = listOf("none: not observed in saved MeshLive runs; library field reports only"),
+        evidence = listOf("none: not observed in saved Nearby runs; library field reports only"),
         confidence = MEDIUM,
-        confidenceNote = "Library-level evidence on other Android versions; MeshLive's own teardown already closes the client, so the check usually finds nothing to do.",
+        confidenceNote = "Library-level evidence on other Android versions; Nearby's own teardown already closes the client, so the check usually finds nothing to do.",
         reviewed = REVIEWED,
         origin = "Backlog G-07: callbacks after cancel were ignored without checking that the client was closed.",
         area = PolicyArea.BLUETOOTH_TRANSPORT,
@@ -228,7 +228,7 @@ internal object GattLinkPolicy {
                 "Add GATT_CONNECTION_TIMEOUT and change connection timeout flow (2024-01-19): a direct connect ends after 30 s with 133, or 147 from Android 14 QPR3"),
         ),
         sourceStatus = PARTIAL,
-        evidence = listOf("none: no saved MeshLive run shows a silent connected link; the 2 s window is the backlog's starting value"),
+        evidence = listOf("none: no saved Nearby run shows a silent connected link; the 2 s window is the backlog's starting value"),
         confidence = MEDIUM,
         confidenceNote = "The mechanism is AOSP; the OEM hang reports are one-project symptoms with LOW cause confidence; thresholds are unmeasured on the six phones.",
         reviewed = REVIEWED,
@@ -262,7 +262,7 @@ internal object GattLinkPolicy {
         sourceStatus = OFFICIAL,
         evidence = listOf("none: no saved run records a second client or a crossed link to one remote; the dial-check line is the first record"),
         confidence = HIGH,
-        confidenceNote = "Commit messages are primary; how often MeshLive's probes, control and media clients overlap on one address is unmeasured.",
+        confidenceNote = "Commit messages are primary; how often Nearby's probes, control and media clients overlap on one address is unmeasured.",
         reviewed = REVIEWED,
         origin = "Backlog G-02 plus aosp-bt-versions GATT-07/GATT-09 (root note 2026-10-14).",
         area = PolicyArea.BLUETOOTH_TRANSPORT,
@@ -290,7 +290,7 @@ internal object GattLinkPolicy {
         sourceStatus = PARTIAL,
         evidence = listOf("none: no saved run has Bluetooth audio active; the 2.4 GHz Wi-Fi halving (WifiCoexistence) is the measured analogue"),
         confidence = MEDIUM,
-        confidenceNote = "The priority mechanism is AOSP source for three controller vendors; the size of the loss on the MeshLive phones is unmeasured.",
+        confidenceNote = "The priority mechanism is AOSP source for three controller vendors; the size of the loss on the Nearby phones is unmeasured.",
         reviewed = REVIEWED,
         origin = "Backlog G-10: WifiCoexistence exists for Wi-Fi only.",
         area = PolicyArea.BLUETOOTH_TRANSPORT,
@@ -322,7 +322,7 @@ internal object GattLinkPolicy {
         sourceStatus = PARTIAL,
         evidence = listOf("none: the M31 -> S24 snoop in le-coc-eatt-stranded-channels shows Android 12 centrals try EATT; the hold's effect is unmeasured"),
         confidence = MEDIUM,
-        confidenceNote = "The defect window is AOSP; that MeshLive links trigger it, and that the hold prevents it, are not shown.",
+        confidenceNote = "The defect window is AOSP; that Nearby links trigger it, and that the hold prevents it, are not shown.",
         reviewed = REVIEWED,
         origin = "Backlog G-04 (b): relay upstream links are server-only on the relay.",
         proposed = true,
@@ -391,7 +391,7 @@ internal object GattLinkPolicy {
                 "OnePlus 8T (KB2001), OnePlus 10 Pro (NE2211), Samsung S22/S22 Ultra on Android 13; Google issue 242755161 (not readable)"),
         ),
         sourceStatus = PARTIAL,
-        evidence = listOf("none: not seen on the S22 in saved MeshLive runs"),
+        evidence = listOf("none: not seen on the S22 in saved Nearby runs"),
         confidence = LOW,
         confidenceNote = "Symptom MEDIUM-HIGH on those phones, cause LOW; a single library thread.",
         reviewed = REVIEWED,
@@ -416,7 +416,7 @@ internal object GattLinkPolicy {
                 "BtLEQueue: \"main thread appears to fix Samsung\" (secondary, through the research catalogue)"),
         ),
         sourceStatus = PARTIAL,
-        evidence = listOf("none: no MeshLive phone shows the symptom; the A/B is for Samsung pair connect success and latency"),
+        evidence = listOf("none: no Nearby phone shows the symptom; the A/B is for Samsung pair connect success and latency"),
         confidence = LOW,
         confidenceNote = "Old Huawei report plus one library comment; the cost is main-thread jank when the main thread is busy.",
         reviewed = REVIEWED,
@@ -434,7 +434,7 @@ internal object GattLinkPolicy {
         effects = emptyList(),
         behaviour = "Experimental (test_gatt_refresh=true, default off): refresh() is called by reflection before the first " +
             "discovery and logged with the SDK; it fails closed when the hidden API is blocked. The existing refresh when a " +
-            "service is missing is unchanged. The MeshLive GATT layout stays append-only across versions.",
+            "service is missing is unchanged. The Nearby GATT layout stays append-only across versions.",
         sources = listOf(
             PolicySource(VENDOR_DOC, "https://github.com/skalldri/rgb-sunglasses/issues/115",
                 "OxygenOS does not honour Service Changed: stale cache; refresh on/off did not rescue in that report"),
@@ -444,7 +444,7 @@ internal object GattLinkPolicy {
         sourceStatus = PARTIAL,
         evidence = listOf("none"),
         confidence = LOW,
-        confidenceNote = "MeshLive peers are unbonded and the layout changes only with app updates; no case is known.",
+        confidenceNote = "Nearby peers are unbonded and the layout changes only with app updates; no case is known.",
         reviewed = REVIEWED,
         origin = "Backlog G-15.",
         proposed = true,

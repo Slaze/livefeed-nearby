@@ -64,7 +64,7 @@ internal sealed interface ScanHealthDecision {
  * (BluetoothGattClientManager.kt: a check every 30 s; if no result for SCAN_STALE_RESULT_MS = 120 s and the
  * scan itself is older than that, force one clean restart). Android can stop delivering results without
  * any onScanFailed (Doze, background throttling, OEM power managers, the scan-timeout downgrade, Location
- * switched off on Android 10-11). MeshLive additions: the verdict needs a peer that is expected nearby
+ * switched off on Android 10-11). Nearby additions: the verdict needs a peer that is expected nearby
  * (a quiet neighbourhood is not a fault), the threshold doubles after every unanswered stale verdict up to
  * ten minutes (so a dead zone costs few restarts), and a restart is only ever requested, through the
  * scan-start gate, by the caller. The thresholds are bitchat's and ours, not measured limits.

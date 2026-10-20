@@ -44,7 +44,7 @@ internal data class UpdateSource(
     }
 
     companion object {
-        const val REPOSITORY = "MeshLive/meshlive-android"
+        const val REPOSITORY = "Slaze/livefeed-nearby"
         val GITHUB = UpdateSource(
             latestUrl = "https://api.github.com/repos/$REPOSITORY/releases/latest",
             assetUrlPrefix = "https://github.com/$REPOSITORY/releases/download/",
@@ -127,10 +127,10 @@ internal object GitHubReleases {
         return LatestRelease(tag, version, versionName, page, assets)
     }
 
-    /** `MeshLive-<versionName>-<abi>.apk` for the first of [abis] the release has; null when none. */
+    /** `Nearby-<versionName>-<abi>.apk` for the first of [abis] the release has; null when none. */
     fun selectApk(release: LatestRelease, abis: List<String>): ReleaseAsset? {
         for (abi in abis) {
-            val wanted = "MeshLive-${release.versionName}-$abi.apk"
+            val wanted = "Nearby-${release.versionName}-$abi.apk"
             release.assets.firstOrNull { it.name == wanted && it.size <= MAX_APK_BYTES }?.let { return it }
         }
         return null

@@ -276,7 +276,7 @@ internal object PhyLinkPolicy {
         sourceStatus = PARTIAL,
         evidence = listOf("none: LeConnectionPriorityKeeper logs show failed updates (0x23/0x3B), not silent reverts"),
         confidence = MEDIUM,
-        confidenceNote = "Three independent reports and AOSP behaviour support the revert; whether MeshLive links revert after " +
+        confidenceNote = "Three independent reports and AOSP behaviour support the revert; whether Nearby links revert after " +
             "its own request (it already requests after discovery) is unmeasured, and the DCK/BALANCED experiments change " +
             "the interval on purpose.",
         reviewed = REVIEWED,

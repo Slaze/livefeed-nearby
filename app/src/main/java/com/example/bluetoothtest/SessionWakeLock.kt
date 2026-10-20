@@ -145,9 +145,9 @@ internal class SessionWakeLockController(
     }
 }
 
-/** Android binding: tag `meshlive:session`, not reference counted. */
+/** Android binding: tag `nearby:session`, not reference counted. */
 internal object SessionWakeLock {
-    const val TAG = "meshlive:session"
+    const val TAG = "nearby:session"
 
     /**
      * Root hook (optional): true while this phone forwards media. The default treats every active session as a live hop;

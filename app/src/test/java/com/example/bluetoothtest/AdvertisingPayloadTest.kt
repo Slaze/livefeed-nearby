@@ -9,7 +9,7 @@ import org.junit.Test
 /**
  * ADV-01 (aosp-bt-versions.md): a connectable legacy advertisement has 28 bytes of primary data on Android 13 and
  * below (the 3-byte Flags field is always charged) and 31 on Android 14 and above when the set is non-discoverable.
- * The same payload that starts on Android 14 throws on Android 12/13. Every MeshLive advertisement is checked here
+ * The same payload that starts on Android 14 throws on Android 12/13. Every Nearby advertisement is checked here
  * against the smaller budget, with the real encoders at their largest.
  */
 class AdvertisingPayloadTest {
@@ -42,7 +42,7 @@ class AdvertisingPayloadTest {
     }
 
     @Test
-    fun theMeshLiveServiceUuidIsAFull128BitEntryNotAShortenedOne() {
+    fun theNearbyServiceUuidIsAFull128BitEntryNotAShortenedOne() {
         assertEquals(16, AdvertisingPayload.uuidBytes(BleL2capControlProtocol.SERVICE_UUID))
         assertEquals(2, AdvertisingPayload.uuidBytes(UUID.fromString("0000180f-0000-1000-8000-00805f9b34fb")))
         assertEquals(4, AdvertisingPayload.uuidBytes(UUID.fromString("12345678-0000-1000-8000-00805f9b34fb")))

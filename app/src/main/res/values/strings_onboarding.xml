@@ -9,7 +9,7 @@
     <string name="ob_page_of">Step %1$d of %2$d</string>
 
     <string name="ob_welcome_title">Calls and live video, no internet needed</string>
-    <string name="ob_welcome_text">MeshLive connects phones directly over Bluetooth. It works with no signal, no Wi-Fi, and where the internet is blocked.</string>
+    <string name="ob_welcome_text">Nearby connects phones directly over Bluetooth. It works with no signal, no Wi-Fi, and where the internet is blocked.</string>
 
     <string name="ob_how_title">What you can do</string>
     <string name="ob_how_call_title">Call people nearby</string>
@@ -26,7 +26,7 @@
     <string name="ob_perm_nearby_title">Nearby devices</string>
     <string name="ob_perm_nearby_text">To find and connect to phones around you.</string>
     <string name="ob_perm_location_title">Location</string>
-    <string name="ob_perm_location_text">Older Android needs it to use Bluetooth. MeshLive never reads where you are.</string>
+    <string name="ob_perm_location_text">Older Android needs it to use Bluetooth. Nearby never reads where you are.</string>
     <string name="ob_perm_camera_title">Camera</string>
     <string name="ob_perm_camera_text">For video calls and going live.</string>
     <string name="ob_perm_mic_title">Microphone</string>
@@ -38,7 +38,7 @@
 
     <string name="ob_bg_title">Keep working with the screen off</string>
     <string name="ob_bg_text">So calls still ring and phones can pass video along while your screen is off. It uses extra battery only while a call, a live video or a relay is on.</string>
-    <string name="ob_bg_allowed">Done. MeshLive can keep working with the screen off.</string>
+    <string name="ob_bg_allowed">Done. Nearby can keep working with the screen off.</string>
     <string name="ob_bg_declined">Not allowed. You can change this later in Settings.</string>
 
     <string name="ob_ready_title">You are ready</string>

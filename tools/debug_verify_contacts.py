@@ -28,7 +28,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE = os.environ.get("MESHLIVE_APP_ID", "io.github.meshlive.app")
+PACKAGE = os.environ.get("NEARBY_APP_ID", "com.livefeed.nearby")
 IDENTITY_LINE = re.compile(r"BENCHMARK identity fingerprint=([0-9a-f]{64}) node=([0-9a-f]{32})")
 SAFE_NAME = re.compile(r"[^A-Za-z0-9 ._-]")
 

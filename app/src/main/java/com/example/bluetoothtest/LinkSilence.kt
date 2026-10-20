@@ -152,7 +152,7 @@ internal class LinkSilence(private val clock: () -> Long = SystemClock::elapsedR
         fun needsFullTeardown(status: Int): Boolean = status == 129 || status == 133 || status == 8
 
         /**
-         * The post-CONNECTED wait before the first GATT operation. MeshLive does not bond, so 300 ms is the comparator;
+         * The post-CONNECTED wait before the first GATT operation. Nearby does not bond, so 300 ms is the comparator;
          * [override] is the Experimental `test_gatt_settle_ms` (0 = none, which is the shipped behaviour).
          */
         fun settleDelayMs(sdk: Int, bonded: Boolean, override: Int): Long =

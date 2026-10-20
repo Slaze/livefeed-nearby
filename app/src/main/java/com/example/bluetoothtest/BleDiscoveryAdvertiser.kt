@@ -71,7 +71,7 @@ class BleDiscoveryAdvertiser(
             throw IOException("Stream advertising was cancelled")
         }
         if (status != AdvertisingSetCallback.ADVERTISE_SUCCESS) {
-            // The platform failure in words (and the stuck-slots remedy when MeshLive owns no set and still gets none).
+            // The platform failure in words (and the stuck-slots remedy when Nearby owns no set and still gets none).
             val stuck = AdvertisingBudget.shared.stuck()?.takeIf { AdvertisingPolicy.stuckReportOn() }
             throw IOException("Stream advertising failed (code $status: ${AdvertisingStart.describe(status)})" + (stuck?.let { ". ${it.message}" } ?: ""))
         }

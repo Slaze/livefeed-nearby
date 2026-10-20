@@ -1,10 +1,10 @@
 # Privacy and security
 
-For users: what other people can learn about you when you use MeshLive, what is hidden, and what is not. The wire-level rules are in [PROTOCOL.md](PROTOCOL.md).
+For users: what other people can learn about you when you use Nearby, what is hidden, and what is not. The wire-level rules are in [PROTOCOL.md](PROTOCOL.md).
 
 ## What nearby phones can see
 
-Anyone with a Bluetooth scanner in range can read what MeshLive broadcasts. They do not need to connect or pair. The
+Anyone with a Bluetooth scanner in range can read what Nearby broadcasts. They do not need to connect or pair. The
 **content** of calls, streams and messages is encrypted. What the announcements reveal depends on the settings and the
 app versions below.
 
@@ -57,7 +57,7 @@ phones (experimental) work only with verified contacts while pseudonyms are on.
   shows its name and address while it is discoverable.
 - **Paired phones.** A phone that is paired with yours through Android can work out your rotating LE addresses.
 - **The Bluetooth device name** can be read by any phone that connects, before the handshake, and is shown by Classic
-  lookups. MeshLive never renames the phone on its own. With rotating IDs on, connectable announcements are
+  lookups. Nearby never renames the phone on its own. With rotating IDs on, connectable announcements are
   non-discoverable on Android 14 and newer, which makes the phone refuse the name to an unpaired phone that connects
   through them. In the test the S24 (Android 16) sent them that way and the ASUS (Android 11) and M31 (Android 12) did
   not, so on Android 13 and older the name stays readable. Links your phone opens itself still show the name to the
@@ -111,7 +111,7 @@ when the screen is off, and what each one can and cannot reveal.
   It only opens the system dialog; nothing changes without your tap. It affects battery use, not what is shared.
 - **Location type on Android 10 and 11 only.** Those versions deliver Bluetooth search results to an app in the
   background only if its foreground service declares the location type, so the app declares `FOREGROUND_SERVICE_LOCATION`
-  and uses the type on Android 10-11, and only while the phone's Location switch is on. MeshLive never reads,
+  and uses the type on Android 10-11, and only while the phone's Location switch is on. Nearby never reads,
   stores or sends your location, and it requests no background-location permission. On those versions Android also needs
   the Location switch on for Bluetooth searches at all; Settings says so when it is off.
 - **Start after a restart.** `RECEIVE_BOOT_COMPLETED` is declared for an opt-in "resume relaying after a restart".
@@ -157,7 +157,7 @@ an area can be followed by the timing of its announcements, and a few capability
 one session on four phones. 
 ## Security model and limitations
 
-What MeshLive protects, and what it does not. The full rules are in [PROTOCOL.md](PROTOCOL.md); to report a
+What Nearby protects, and what it does not. The full rules are in [PROTOCOL.md](PROTOCOL.md); to report a
 problem privately, read [SECURITY.md](../SECURITY.md).
 
 **Encrypted and authenticated.**
@@ -180,7 +180,7 @@ problem privately, read [SECURITY.md](../SECURITY.md).
 
 **What is not hidden.**
 
-- **Discovery is public.** Anyone with a Bluetooth scanner can see that a MeshLive phone is nearby, whether it offers a
+- **Discovery is public.** Anyone with a Bluetooth scanner can see that a Nearby phone is nearby, whether it offers a
   stream or accepts calls, and the stream's rough size and bitrate.
 - **Rotating IDs, with limits.** Announcements carry a random ID that changes every 15 minutes (on by default), so a passive scanner could not follow a phone across the three ID changes we measured. A live stream
   source's identity, Classic Bluetooth addresses, paired phones, a lone phone's announcement timing and a few capability
@@ -190,7 +190,7 @@ problem privately, read [SECURITY.md](../SECURITY.md).
   happening" and often "voice only" versus "video". A first Classic contact with an unpaired phone can expose its name
   and address while it is discoverable.
 - **No authenticated radio link on LE.** LE GATT and CoC (and Classic without pairing) have no Android-level
-  authenticated link key. MeshLive's own handshakes do not depend on one, so an active attacker between the phones
+  authenticated link key. Nearby's own handshakes do not depend on one, so an active attacker between the phones
   cannot read or forge content, but can drop, delay or jam traffic.
 - **A prefix is not an owner.** Discovery binds a connection to a 48-bit prefix of the node ID, which a determined
   attacker could try to grind a key for. Compare the QR code or safety code with a contact in person; a verified

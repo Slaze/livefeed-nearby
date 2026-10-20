@@ -1,8 +1,9 @@
 # Third-party notices
 
-MeshLive is Copyright (C) 2026 The MeshLive Authors and is licensed under the GNU General Public License,
-version 3 or (at your option) any later version (see `LICENSE`). This file reproduces the licences and notices of
-third-party code and data that MeshLive includes, ports, or uses. The native sources (libaom, libopus) are not
+Nearby is a GPL-3.0-or-later fork of MeshLive. Original work is Copyright (C) 2026 The MeshLive Authors
+and is licensed under the GNU General Public License, version 3 or (at your option) any later version
+(see `LICENSE`). This file reproduces the licences and notices of
+third-party code and data that Nearby includes, ports, or uses. The native sources (libaom, libopus) are not
 stored in this repository: `tools/fetch_native_sources.py` downloads the pinned versions and verifies them by
 SHA-256 before a build.
 
@@ -334,7 +335,7 @@ host tool and is not built into the app.
 `tools/score_audio_quality.py`. Its Python wrapper is MIT-licensed, but it bundles the ITU-T P.862 reference
 implementation, whose terms restrict modification, redistribution and commercial use
 (https://github.com/ludlows/PESQ, header of `pesq/pesq.h`; https://www.itu.int/rec/T-REC-P.862). It is opt-in,
-is never distributed with MeshLive, and is not covered by MeshLive's licence. Without it the scorer reports PESQ as
+is never distributed with Nearby, and is not covered by Nearby's licence. Without it the scorer reports PESQ as
 UNMEASURED.
 
 ## Runtime dependency licences (release APK)

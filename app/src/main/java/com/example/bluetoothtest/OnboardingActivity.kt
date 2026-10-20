@@ -144,7 +144,7 @@ class OnboardingActivity : AppCompatActivity() {
         content.removeAllViews()
         when (page) {
             Page.WELCOME -> {
-                hero(R.drawable.ic_stat_meshlive)
+                hero(R.drawable.ic_stat_nearby)
                 title(R.string.ob_welcome_title)
                 body(R.string.ob_welcome_text)
             }

@@ -182,7 +182,7 @@ internal object CocSocketErrors {
 
 /**
  * C-03 (Android 10): a CoC client connect to an address the stack has not learned in this Bluetooth
- * session never establishes (the address type is not copied into the stack record). MeshLive reads
+ * session never establishes (the address type is not copied into the stack record). Nearby reads
  * the PSM over GATT first, which creates the record; this check only logs, so a refactor that calls
  * the CoC connect without a GATT connect or fresh scan sighting is visible in the first run.
  */

@@ -1,5 +1,5 @@
-# fdroiddata metadata draft (metadata/<applicationId>.yml) for MeshLive.
-# The file name is the final applicationId, io.github.meshlive.app (`appId` in app/build.gradle.kts;
+# fdroiddata metadata draft (metadata/<applicationId>.yml) for Nearby.
+# The file name is the final applicationId, com.livefeed.nearby (`appId` in app/build.gradle.kts;
 # docs/ARCHITECTURE.md "Distribution and releases"). Companion file: distribution/fdroid/srclibs/libaom.yml (goes to fdroiddata srclibs/).
 # Checked 2026-10-11 with fdroidserver 2.4.5 (`fdroid readmeta` and `fdroid lint`: clean). NOT yet run:
 # `fdroid build` (needs the buildserver image). See the notes at the end for what remains untested.
@@ -7,17 +7,17 @@ Categories:
   - Connectivity
   - Multimedia
 License: GPL-3.0-or-later
-AuthorName: The MeshLive Authors
-WebSite: https://github.com/MeshLive/meshlive-android
-SourceCode: https://github.com/MeshLive/meshlive-android
-IssueTracker: https://github.com/MeshLive/meshlive-android/issues
-Changelog: https://github.com/MeshLive/meshlive-android/releases
+AuthorName: Iconia Global
+WebSite: https://github.com/Slaze/livefeed-nearby
+SourceCode: https://github.com/Slaze/livefeed-nearby
+IssueTracker: https://github.com/Slaze/livefeed-nearby/issues
+Changelog: https://github.com/Slaze/livefeed-nearby/releases
 
-Name: MeshLive
-AutoName: MeshLive
+Name: Nearby
+AutoName: Nearby
 
 RepoType: git
-Repo: https://github.com/MeshLive/meshlive-android.git
+Repo: https://github.com/Slaze/livefeed-nearby.git
 
 # Anti-features: none known. No proprietary dependency, no tracking, no ads, no network service
 # (media is Bluetooth only; INTERNET is declared for the experimental local Wi-Fi Direct share page).
@@ -89,7 +89,7 @@ Builds:
 # GitHub after checking it against its own build (bit-identical except META-INF signature files).
 # Enable it only after `python -B tools/check_reproducible_build.py compare <our unsigned APK> <F-Droid's>` passes for
 # a release built with AGP 8.13.2 or newer on the Linux buildserver. Until then F-Droid signs its own build.
-# `Binaries` must point at FDROID-FLAVOUR files: the release page's MeshLive-<version>-<abi>.apk files are the github
+# `Binaries` must point at FDROID-FLAVOUR files: the release page's Nearby-<version>-<abi>.apk files are the github
 # flavour (updater, REQUEST_INSTALL_PACKAGES) and can never match this recipe's build (tools/tests checks that no
 # Binaries line names them). Publishing developer-signed fdroid-flavour APKs would also let them replace a github
 # install (same package, same key); do that only with separate asset names and a deliberate decision.

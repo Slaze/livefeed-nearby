@@ -15,7 +15,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <!-- Answers of the update session; reachable only through the PendingIntent MeshLive gave PackageInstaller. -->
+        <!-- Answers of the update session; reachable only through the PendingIntent Nearby gave PackageInstaller. -->
         <receiver
             android:name=".UpdateInstallReceiver"
             android:exported="false" />

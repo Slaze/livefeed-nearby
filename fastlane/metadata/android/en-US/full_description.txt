@@ -1,4 +1,4 @@
-MeshLive connects nearby phones directly over encrypted Bluetooth, with no internet, SIM card, account or server. It is made for blackouts, disasters, censorship, remote places and crowded events.
+Nearby connects nearby phones directly over encrypted Bluetooth, with no internet, SIM card, account or server. It is made for blackouts, disasters, censorship, remote places and crowded events.
 
 <b>What you can do</b>
 <ul>

@@ -64,7 +64,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from android_tools import default_adb  # noqa: E402
 
-PACKAGE = os.environ.get("MESHLIVE_APP_ID", "io.github.meshlive.app")
+PACKAGE = os.environ.get("NEARBY_APP_ID", "com.livefeed.nearby")
 ACTIVITY = "com.example.bluetoothtest.MainActivity"
 LINE = re.compile(r"BENCHMARK encoder_bench: (.*)$")
 BRACKET = re.compile(r"^\[(.*)\]$")

@@ -13,7 +13,7 @@ import java.net.URL
  * HTTPS; a response is size-limited before it is read.
  */
 internal object UpdateHttp {
-    const val USER_AGENT = "MeshLive-updater"
+    const val USER_AGENT = "Nearby-updater"
     private const val MAX_REDIRECTS = 5
     private const val CONNECT_TIMEOUT_MS = 15_000
     private const val READ_TIMEOUT_MS = 30_000

@@ -2,7 +2,7 @@
 
 *Engineering log and process for contributors; you do not need it to use or build the app.*
 
-This is the contributor guide to testing MeshLive: what you can check without a phone, what the acceptance gates
+This is the contributor guide to testing Nearby: what you can check without a phone, what the acceptance gates
 mean, how to set up two or more Android phones of your own, how to run and read the benchmark suite, and how to
 make a release. It is written for someone who owns a few phones and a computer, not a lab.
 
@@ -264,7 +264,7 @@ mapping, and validated detector tolerances. Until then it remains UNMEASURED.
 4. Check the Wi-Fi band. 2.4 GHz Wi-Fi roughly halved Bluetooth throughput on one reference phone (M31 GATT about 0.4
    Mbps against about 0.9 Mbps with Wi-Fi off). Each preflight records the participants' Wi-Fi band as a radio
    condition; report it with your results and check it before blaming the hardware.
-5. Close other apps that use the camera, microphone or Bluetooth, and make sure no stale MeshLive process is running
+5. Close other apps that use the camera, microphone or Bluetooth, and make sure no stale Nearby process is running
    on a phone you are not testing (isolated cases check this for every registered phone).
 6. Do not attach photos or screenshots of other people to results. For live Camera2 tests point the camera at a
    controlled, non-private target such as a chart or a moving object.
@@ -279,7 +279,7 @@ cp tools/benchmark_devices.example.json tools/benchmark_devices.json
 
 Edit the copy: one entry per phone under `devices`, keyed by an alias (lower case, for example `pixel_a`), with the
 phone's adb `serial` (`adb devices`; the mDNS name for wireless debugging) and its `node_prefix`, the first 12 hex digits
-of the phone's MeshLive node ID. The app shows the node ID and logs it as `BENCHMARK call available: node=...`; the
+of the phone's Nearby node ID. The app shows the node ID and logs it as `BENCHMARK call available: node=...`; the
 capability export below records `node_prefix` too. The example's values are placeholders. Aliases must match the
 scope (`tools/benchmark_scope.json`) and `tools/device_policy_registry.json`, so add your own alias to both when you add a
 phone. Reinstalling with data cleared creates a new identity, so refresh the prefix after an uninstall or reset. A registry entry is never proof that a phone is available; preflight checks it every run.
@@ -292,11 +292,11 @@ transport limits, playback options). Build and run the instrumentation test on o
 ```
 ./gradlew :app:assembleDebugAndroidTest
 adb -s SERIAL install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-adb -s SERIAL shell am instrument -w -r -e class com.example.bluetoothtest.DeviceBenchmarkCapabilitiesTest io.github.meshlive.app.test/androidx.test.runner.AndroidJUnitRunner
-adb -s SERIAL pull /sdcard/Android/data/io.github.meshlive.app/files/benchmark-capabilities.json benchmarks/catalog/capabilities/ALIAS.json
+adb -s SERIAL shell am instrument -w -r -e class com.example.bluetoothtest.DeviceBenchmarkCapabilitiesTest com.livefeed.nearby.test/androidx.test.runner.AndroidJUnitRunner
+adb -s SERIAL pull /sdcard/Android/data/com.livefeed.nearby/files/benchmark-capabilities.json benchmarks/catalog/capabilities/ALIAS.json
 ```
 
-(The package name is the application ID, `io.github.meshlive.app`; test classes keep the
+(The package name is the application ID, `com.livefeed.nearby`; test classes keep the
 `com.example.bluetoothtest` Kotlin package.) Add the file to a copy of `tools/benchmark_scope.json`
 under `capabilities` and add the alias to `required_phones`, then compile your inventory from that copy with
 `--scope`. Keep the old capability file when you refresh one: capability refreshes keep their original evidence and
@@ -435,7 +435,7 @@ blocked case. A bundle can select original case IDs without copying them:
 
 An explicitly empty `case_ids` selects nothing and blocks an empty run. Generated bundles mark cases concurrent;
 causal bundles declare them isolated. Isolated cases also check that every registered non-participant is reachable and
-has no MeshLive process; an unknown quiet state blocks.
+has no Nearby process; an unknown quiet state blocks.
 
 - `--defer-analysis` does the phone work, capture and cleanup, then exits with each case marked `PENDING_ANALYSIS`
   (neither scored nor passed). Start the next suite on the freed phones and score in the background with
@@ -893,7 +893,7 @@ repository); CI holds no signing key.
 2. `./gradlew :app:testDebugUnitTest :app:compileGithubReleaseKotlin :app:compileFdroidReleaseKotlin :app:processGithubReleaseManifest :app:processFdroidReleaseManifest`, `MESHLIVE_REQUIRE_FLAVOUR_MANIFESTS=1 python -B -m pytest -q tools/tests/test_flavour_manifests.py` (the F-Droid manifest must have no install permission; without the variable the test skips when no manifest was merged) and `python -B -m unittest discover -s tools/tests` pass, and `python tools/fetch_native_sources.py --verify-only` reports libaom and libopus OK (without `--verify-only` it downloads and verifies the pinned sources; `make_release.py` refuses a release otherwise).
 2b. Before a release that changes Gradle files, native code or toolchain pins, run `python -B tools/check_reproducible_build.py build ...` (ARCHITECTURE "Distribution and releases", reproducible builds) in two clean worktrees at different paths; any differing entry must be explained or fixed. Never during a phone window or next to another Gradle build.
 2c. On every APK that goes to a phone or a release (frozen benchmark build, `make_release.py` output), run `python -B tools/dex_api_scan.py APK`: it reads the dex against the SDK's api-versions.xml and must report 0 unreviewed `java/`/`javax/` calls above minSdk (an `--allow` file lists reviewed ones; `android/` candidates are informational and must sit behind `SDK_INT` checks). The unit tests run on a newer Java than the phones, and a missing platform method is an `Error` that ends the app process (DECISIONS "Relayed calls: first phone probe"). `ApiLevelGuardTest` is the cheap source-level guard.
-3. `python tools/make_release.py`. Publish the release as **Latest** (not a pre-release): the in-app update check reads `releases/latest`, which ignores pre-releases and drafts, and it needs the per-ABI APKs plus `SHA256SUMS` (README "Updates inside the app"). It builds the split `assembleGithubRelease` (the github flavour: opt-in updater and install permission; the F-Droid recipe builds the `fdroid` flavour) with `--no-daemon`, verifies every APK (single signer, expected certificate, native ABIs, 16 KB check on 64-bit libraries, versionCode = base * 10 + ABI digit, fastlane changelog present), and writes the per-ABI APKs, `MeshLive.apk` (a copy of the arm64-v8a APK; the README download button links `releases/latest/download/MeshLive.apk`), `SHA256SUMS`, `apksigner-certs.txt`, `signing-cert.sha256`, `SOURCE-MANIFEST.txt` (with the native-source pins) and a `RELEASE-NOTES.md` template to `release/<versionName>-<versionCode>/` (gitignored). Finish the notes (changes, benchmark build ids, known limits) by hand.
+3. `python tools/make_release.py`. Publish the release as **Latest** (not a pre-release): the in-app update check reads `releases/latest`, which ignores pre-releases and drafts, and it needs the per-ABI APKs plus `SHA256SUMS` (README "Updates inside the app"). It builds the split `assembleGithubRelease` (the github flavour: opt-in updater and install permission; the F-Droid recipe builds the `fdroid` flavour) with `--no-daemon`, verifies every APK (single signer, expected certificate, native ABIs, 16 KB check on 64-bit libraries, versionCode = base * 10 + ABI digit, fastlane changelog present), and writes the per-ABI APKs, `Nearby.apk` (a copy of the arm64-v8a APK; the README download button links `releases/latest/download/Nearby.apk`), `SHA256SUMS`, `apksigner-certs.txt`, `signing-cert.sha256`, `SOURCE-MANIFEST.txt` (with the native-source pins) and a `RELEASE-NOTES.md` template to `release/<versionName>-<versionCode>/` (gitignored). Finish the notes (changes, benchmark build ids, known limits) by hand.
 4. Install that exact APK on one idle phone and check that the About screen's signing-certificate fingerprint equals
    `signing-cert.sha256`, and that it matches the fingerprint published in the USER_GUIDE.md section "Verifying a release". Do
    no phone work during someone else's test window.
@@ -906,5 +906,5 @@ repository); CI holds no signing key.
    key may be exposed, stop releasing and rotate with a new application-signing plan (Android requires the same key
    for updates, so rotation needs Play key rotation or a new package).
 
-The application ID is `io.github.meshlive.app`; the harness follows it and `MESHLIVE_APP_ID` overrides it for a
+The application ID is `com.livefeed.nearby`; the harness follows it and `NEARBY_APP_ID` overrides it for a
 build with another ID. Never change it in a feature branch: a new ID cannot update installs of the old one.

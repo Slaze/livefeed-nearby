@@ -16,7 +16,7 @@ internal data object LocationForegroundServiceType : DevicePolicyEffect {
 
 /** Experimental: a renewable partial wake lock while a screen-off session forwards media. */
 internal data object SessionWakeLockEffect : DevicePolicyEffect {
-    override fun describe(): String = "hold a renewable partial wake lock (meshlive:session) during a screen-off active session"
+    override fun describe(): String = "hold a renewable partial wake lock (nearby:session) during a screen-off active session"
 }
 
 /** Experimental, opt-in: start the connectedDevice foreground service after a restart or an app update. */
@@ -84,7 +84,7 @@ internal object ServiceFamilyPolicy {
         title = "Partial wake lock during a screen-off active session (Experimental)",
         matcher = DeviceMatcher(sdkMin = 29),
         effects = listOf(SessionWakeLockEffect),
-        behaviour = "Only with the Experimental switch test_session_wake_lock=true: a renewable PARTIAL_WAKE_LOCK (meshlive:session, " +
+        behaviour = "Only with the Experimental switch test_session_wake_lock=true: a renewable PARTIAL_WAKE_LOCK (nearby:session, " +
             "90 s safety timeout renewed every minute) is held after startForeground succeeded, while the screen is off and the " +
             "session is an active hop (not idle availability), up to a daily budget; released when the service ends. " +
             "Default off: no lock is taken.",
@@ -101,7 +101,7 @@ internal object ServiceFamilyPolicy {
         sourceStatus = PARTIAL,
         evidence = listOf("none: not measured on a screen-off relay; needs dumpsys power and timer lateness with the lock on and off"),
         confidence = MEDIUM,
-        confidenceNote = "The AOSP rule is certain; whether MeshLive timers stall without the lock, and whether OEM builds honour a " +
+        confidenceNote = "The AOSP rule is certain; whether Nearby timers stall without the lock, and whether OEM builds honour a " +
             "foreground-service lock, is unmeasured. A held lock does not prove the CPU stays awake. Who may flip the default " +
             "(sideload build only) is user question Q-N5.",
         reviewed = REVIEWED,

@@ -563,7 +563,7 @@ internal class StableAdvertisingSet(
             deadByStack = true
             budget.noteStopped(this)
             if (stopped || !startedOk) return
-            // The stack dropped a set MeshLive did not stop: the advertisement is gone.
+            // The stack dropped a set Nearby did not stop: the advertisement is gone.
             applyDecision(this, watchdog.onUnexpectedStop(), "set_stopped")
         }
 

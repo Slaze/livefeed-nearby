@@ -34,7 +34,7 @@ from android_tools import default_adb  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from device_log_capture import LogCapture, merge_dump  # noqa: E402
 
-PACKAGE = os.environ.get("MESHLIVE_APP_ID", "io.github.meshlive.app")
+PACKAGE = os.environ.get("NEARBY_APP_ID", "com.livefeed.nearby")
 COMPONENT = f"{PACKAGE}/com.example.bluetoothtest.MainActivity"
 APP_LOG_FILTERS = ("BluetoothVideo:I", "GattVideoSetup:I", "AndroidRuntime:E", "*:S")
 DEFAULT_ADB = default_adb()

@@ -107,7 +107,7 @@ internal object MessageNotifications {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
         val builder = NotificationCompat.Builder(app, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stat_meshlive)
+            .setSmallIcon(R.drawable.ic_stat_nearby)
             .setContentTitle(app.getString(R.string.messages_notification_title))
             .setContentText(app.resources.getQuantityString(R.plurals.messages_notification_text, unread, unread))
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
@@ -122,7 +122,7 @@ internal object MessageNotifications {
             app,
             CHANNEL_ID,
             NotificationKind.MESSAGE,
-            R.drawable.ic_stat_meshlive,
+            R.drawable.ic_stat_nearby,
             NotificationPrivacy.showPeerNames(app),
         ).build()
         runCatching { manager.notify(NOTIFICATION_ID, notification) }

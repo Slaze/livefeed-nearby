@@ -208,9 +208,9 @@ class MakeReleaseTest(unittest.TestCase):
     def test_success_writes_all_outputs(self):
         folder = self.make()
         self.assertEqual(folder, self.out / "1.2-7")
-        names = {"arm64-v8a": "MeshLive-1.2-arm64-v8a.apk",
-                 "armeabi-v7a": "MeshLive-1.2-armeabi-v7a.apk",
-                 "universal": "MeshLive-1.2-universal.apk"}
+        names = {"arm64-v8a": "Nearby-1.2-arm64-v8a.apk",
+                 "armeabi-v7a": "Nearby-1.2-armeabi-v7a.apk",
+                 "universal": "Nearby-1.2-universal.apk"}
         sums = (folder / "SHA256SUMS").read_text()
         for name in names.values():
             digest = hashlib.sha256((folder / name).read_bytes()).hexdigest()
@@ -236,8 +236,8 @@ class MakeReleaseTest(unittest.TestCase):
         folder = self.make(universal=False)
         self.assertFalse(list(folder.glob("*universal*")))
         self.assertEqual(sorted(p.name for p in folder.glob("*.apk")),
-                         ["MeshLive-1.2-arm64-v8a.apk", "MeshLive-1.2-armeabi-v7a.apk", "MeshLive.apk"])
-        self.assertEqual((folder / "MeshLive.apk").read_bytes(), (folder / "MeshLive-1.2-arm64-v8a.apk").read_bytes())
+                         ["Nearby-1.2-arm64-v8a.apk", "Nearby-1.2-armeabi-v7a.apk", "Nearby.apk"])
+        self.assertEqual((folder / "Nearby.apk").read_bytes(), (folder / "Nearby-1.2-arm64-v8a.apk").read_bytes())
 
     def test_wrong_version_code_refused(self):
         def runner(args, cwd, input_bytes=None):

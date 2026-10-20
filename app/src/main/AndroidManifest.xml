@@ -113,6 +113,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- LiveFeed Nearby sidecar: opens this radio as a separate app, not a merged stack. -->
+            <intent-filter>
+                <action android:name="com.livefeed.action.NEARBY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <!-- First-run explanation; started by MainActivity only for a plain user launch. -->
         <activity

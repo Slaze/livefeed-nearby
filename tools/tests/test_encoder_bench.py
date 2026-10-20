@@ -446,12 +446,12 @@ class AppPidsNoProcessTest(unittest.TestCase):
     def test_pidof_exit_1_means_no_pids(self):
         class Phone:
             def adb(self, *args, **kwargs):
-                raise RuntimeError("adb shell pidof io.github.meshlive.app exited 1: ")
-        self.assertEqual(encoder_bench.app_pids(Phone(), "io.github.meshlive.app"), set())
+                raise RuntimeError("adb shell pidof com.livefeed.nearby exited 1: ")
+        self.assertEqual(encoder_bench.app_pids(Phone(), "com.livefeed.nearby"), set())
 
     def test_other_adb_failures_still_raise(self):
         class Phone:
             def adb(self, *args, **kwargs):
-                raise RuntimeError("adb shell pidof io.github.meshlive.app exited 255: device offline")
+                raise RuntimeError("adb shell pidof com.livefeed.nearby exited 255: device offline")
         with self.assertRaises(RuntimeError):
-            encoder_bench.app_pids(Phone(), "io.github.meshlive.app")
+            encoder_bench.app_pids(Phone(), "com.livefeed.nearby")

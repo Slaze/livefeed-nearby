@@ -1,4 +1,4 @@
-"""Screen the candidate word lists for names-v1 (MeshLive Design G, F23) and write the two list files and a report.
+"""Screen the candidate word lists for names-v1 (Nearby Design G, F23) and write the two list files and a report.
 
 The candidates below were written for this project (original work, GPL-3.0-or-later with the app). The screening inputs are
 NOT shipped and are downloaded by the operator: the LDNOOBW lists (CC BY 4.0, https://github.com/LDNOOBW) for en, es, fr,

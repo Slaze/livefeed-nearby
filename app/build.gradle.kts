@@ -20,7 +20,7 @@ val abiVersionDigits = mapOf("armeabi-v7a" to 1, "arm64-v8a" to 2)
 // RENAME POINT (one line): the installed application id. The Kotlin package and `namespace` below stay
 // com.example.bluetoothtest on purpose (renaming them is not needed for a new id). Override for a trial build
 // with -PappId=<id>. A new id is a different app to Android: it cannot update an install of the old one.
-val appId = (project.findProperty("appId") as String?) ?: "io.github.meshlive.app"
+val appId = (project.findProperty("appId") as String?) ?: "com.livefeed.nearby"
 
 // Optional native-build overrides, so a Linux or F-Droid build needs no machine-specific path:
 // -PaomSourceDir=<libaom checkout at the pinned commit>, -PperlExecutable=<perl>.

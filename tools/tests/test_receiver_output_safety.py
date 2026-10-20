@@ -178,7 +178,7 @@ if ($args -contains 'get-state') { $global:LASTEXITCODE=0; 'device' }
 else {
     [Threading.Thread]::CurrentThread.CurrentCulture = [Globalization.CultureInfo]::GetCultureInfo('de-DE')
     $global:LASTEXITCODE = """ + ("7" if failed else "0") + """
-    ' 123 12.5 io.github.meshlive.app'
+    ' 123 12.5 com.livefeed.nearby'
 }
 """
                 result = self.invoke("collect_connected_cpu.ps1", {

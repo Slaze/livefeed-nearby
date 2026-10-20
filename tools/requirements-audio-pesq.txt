@@ -4,7 +4,7 @@
 # wrapper is MIT-licensed, but the ITU reference C code it bundles carries ITU / patent-holder terms that restrict
 # modification, redistribution and commercial use (see the header of pesq/pesq.h in
 # https://github.com/ludlows/PESQ and https://www.itu.int/rec/T-REC-P.862). It is not GPL-compatible and is never
-# part of the MeshLive app. Install it only if those terms are acceptable for your use; without it the scorer reports
+# part of the Nearby app. Install it only if those terms are acceptable for your use; without it the scorer reports
 # PESQ as UNMEASURED and still computes STOI/ESTOI.
 #
 #   python -m pip install -r tools/requirements-audio-pesq.txt

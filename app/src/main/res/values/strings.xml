@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MeshLive</string>
+    <string name="app_name">Nearby</string>
     <string name="paired_device">Paired destination</string>
     <string name="video_codec">Encoder</string>
     <string name="refresh_devices">Refresh paired devices</string>
@@ -137,7 +137,7 @@
     <string name="call_connecting_media">Connecting…</string>
     <string name="call_info_title">Call info</string>
     <string name="people_empty_title">No one found yet</string>
-    <string name="people_empty_text">Ask the other person to open MeshLive. Stay within about 10 to 30 metres. The list updates by itself.</string>
+    <string name="people_empty_text">Ask the other person to open Nearby. Stay within about 10 to 30 metres. The list updates by itself.</string>
     <string name="route_direct">In range</string>
     <string name="route_relayed">Reachable through %1$d other phones</string>
     <string name="route_relayed_one">Reachable through 1 other phone</string>
@@ -364,7 +364,7 @@
     <string name="help_title">Help and feedback</string>
     <string name="help_export">Export diagnostics</string>
     <string name="help_export_description">Creates a short technical report (app version, phone model, Bluetooth support). It contains no video, sound, messages, names or keys. You choose where to send it; it is also copied.</string>
-    <string name="help_export_subject">MeshLive diagnostics</string>
+    <string name="help_export_subject">Nearby diagnostics</string>
     <string name="help_report_bug">Report a bug</string>
     <string name="help_share_app">Share this app</string>
     <string name="link_health_title">Link health</string>

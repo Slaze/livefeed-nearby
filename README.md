@@ -1,19 +1,8 @@
-# MeshLive
+# Nearby
 
-**Encrypted voice and video calls, live video and live audio between phones over a Bluetooth mesh. No internet needed.**
+**LiveFeed’s Bluetooth radio.** Encrypted voice and video calls, live video and live audio between phones over a Bluetooth mesh. No internet needed.
 
-<p align="center">
-  <a href="https://github.com/MeshLive/meshlive-android/releases/latest/download/MeshLive.apk"><img alt="Download MeshLive for Android" src="https://img.shields.io/badge/Download-MeshLive%20for%20Android-000000?style=for-the-badge&logo=android&logoColor=white" height="56"></a>
-  &nbsp;
-  <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/MeshLive/meshlive-android"><img alt="Get it on Obtainium" src="https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png" height="56"></a>
-</p>
-
-<p align="center">Android 10 or newer · free · no account · <a href="#install">How to install</a></p>
-
-<p align="center">
-  <a href="https://scorecard.dev/viewer/?uri=github.com/MeshLive/meshlive-android"><img alt="OpenSSF Scorecard" src="https://api.scorecard.dev/projects/github.com/MeshLive/meshlive-android/badge"></a>
-  <a href="https://github.com/MeshLive/meshlive-android/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/MeshLive/meshlive-android/actions/workflows/codeql.yml/badge.svg?branch=main"></a>
-</p>
+This is a GPL-3.0-or-later fork of [MeshLive Android](https://github.com/MeshLive/meshlive-android). The launcher name is **Nearby**, the application id is `com.livefeed.nearby`, and LiveFeed opens it with `com.livefeed.action.NEARBY`. The Kotlin package stays `com.example.bluetoothtest`. Wire formats, BLE UUIDs and hop-local security are unchanged, so phones on this radio still speak the same mesh protocol.
 
 <p>
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/02-live.png" width="19%" alt="Live nearby: a radio and a video stream">
@@ -28,9 +17,9 @@
 - **Call people nearby.** Voice or video, end-to-end encrypted, phone to phone.
 - **Go live.** Share your camera with everyone around you, or go **audio only**, like a local radio that keeps playing with the screen off.
 - **Reach further.** Phones in between pass calls and streams along, so you can reach people out of your own Bluetooth range.
-- **Stay private.** No internet, SIM card, account or server. Strangers see a random name; your contacts recognise you.
+- **Stay private.** No internet, SIM card, account or server on the radio. Strangers see a random name; your contacts recognise you.
 
-Built for blackouts, disasters, censorship, remote places and crowded events. Free and open source (GPL-3.0).
+LiveFeed accounts stay off the Bluetooth wire. Binding a LiveFeed user to a radio node ID is a separate, off-air step. Android 10 or newer. Free and open source (GPL-3.0-or-later).
 
 ## How it works
 
@@ -51,19 +40,20 @@ Limits, plainly: a live stream shows its source to everyone who watches; on Andr
 
 ## Install
 
-1. On your phone, tap **[Download MeshLive](https://github.com/MeshLive/meshlive-android/releases/latest/download/MeshLive.apk)**.
-2. Open the file. If Android asks, allow your browser to **install unknown apps**, then tap **Install**.
-3. Open MeshLive and allow **Nearby devices**, **Camera** and **Microphone**.
+No public Nearby release is published yet. Build the GitHub-flavour debug APK and sideload it:
 
-Both people need MeshLive. To get updates automatically, add the project in [Obtainium](https://github.com/ImranR98/Obtainium) with the button above. With no internet, a friend can send you the app: in MeshLive, Settings, then **Share this app**. The app can also check for updates, but only if you say yes.
+```bash
+python tools/fetch_native_sources.py
+./gradlew :app:assembleGithubDebug
+```
 
-To check a download is genuine, see [how to verify a release](docs/USER_GUIDE.md#verifying-a-release). Other install options, the file list, features and common questions are in the [user guide](docs/USER_GUIDE.md).
+The APK is `app/build/outputs/apk/github/debug/app-github-debug.apk`. Open Nearby and allow **Nearby devices**, **Camera** and **Microphone**. Both people need this app. With no internet, a friend can send you the app: in Nearby, Settings, then **Share this app**.
+
+Intended GitHub home (create it before shipping updates): [Slaze/livefeed-nearby](https://github.com/Slaze/livefeed-nearby). Release files will be `Nearby.apk` and `Nearby-<version>-<abi>.apk`. How to verify a future release: [docs/USER_GUIDE.md](docs/USER_GUIDE.md#verifying-a-release).
 
 ## Status
 
-MeshLive is in **beta**, tested on seven phones from Samsung, Xiaomi, ASUS and OPPO (Android 10 to 16) and with a first iPhone. Results vary by phone pair: see [docs/DEVICES.md](docs/DEVICES.md). Do not rely on it where your safety depends on it. An iPhone app is in development.
-
-**Please report your phone.** The [device report form](https://github.com/MeshLive/meshlive-android/issues/new?template=device-report.yml) takes two minutes; reports where everything worked help as much as failures.
+Nearby is in **beta**, tested on seven phones from Samsung, Xiaomi, ASUS and OPPO (Android 10 to 16) and with a first iPhone (upstream MeshLive runs). Results vary by phone pair: see [docs/DEVICES.md](docs/DEVICES.md). Do not rely on it where your safety depends on it. An iPhone app is in development upstream (`MeshLive/meshlive-ios`).
 
 ## Build from source
 
@@ -74,7 +64,7 @@ python tools/fetch_native_sources.py   # downloads the pinned libaom and libopus
 ./gradlew :app:testDebugUnitTest :app:assembleGithubDebug
 ```
 
-The APK is `app/build/outputs/apk/github/debug/app-github-debug.apk`. Developers can read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (how it is built, build notes), [docs/SWITCHES.md](docs/SWITCHES.md) (the list of experimental switches) and [docs/PROTOCOL.md](docs/PROTOCOL.md) (wire formats and security rules). Test results are in [MeshLive/meshlive-benchmarks](https://github.com/MeshLive/meshlive-benchmarks).
+Developers can read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (how it is built, build notes), [docs/SWITCHES.md](docs/SWITCHES.md) (the list of experimental switches) and [docs/PROTOCOL.md](docs/PROTOCOL.md) (wire formats and security rules). Upstream phone results live in [MeshLive/meshlive-benchmarks](https://github.com/MeshLive/meshlive-benchmarks).
 
 ## Documentation
 
@@ -96,12 +86,12 @@ Bug reports, device results, documentation and code are welcome. Start with [CON
 
 ## Security
 
-Report vulnerabilities privately through [GitHub private vulnerability reporting](https://github.com/MeshLive/meshlive-android/security/advisories/new). See [SECURITY.md](SECURITY.md).
+Report vulnerabilities privately through [GitHub private vulnerability reporting](https://github.com/Slaze/livefeed-nearby/security/advisories/new) once that repository exists. See [SECURITY.md](SECURITY.md). Until then, open an issue that says only “security report” with no details.
 
 ## How this was built
 
-Most of the code was written with AI assistance (Anthropic's Claude), directed by the maintainer, who decides what the app does and tests it on real phones. It has not had an independent security audit.
+Most of the radio code was written with AI assistance (Anthropic's Claude), directed by the upstream MeshLive maintainer, who tested it on real phones. This fork’s product identity (Nearby / LiveFeed sidecar) is a later change. It has not had an independent security audit.
 
 ## License
 
-GPL-3.0-or-later. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+GPL-3.0-or-later. Original work copyright The MeshLive Authors. See [LICENSE](LICENSE), [AUTHORS](AUTHORS) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

@@ -91,7 +91,7 @@ internal object AudioPolicyEntries {
         PolicySourceKind.GOOGLE_OPEN_SOURCE,
         "https://webrtc.googlesource.com/src/+/42995c384b59f0da002a6078d4a0320af39a16b8/sdk/android/src/java/org/webrtc/audio/WebRtcAudioEffects.java",
         "WebRTC skips the AOSP software AEC/NS (UUIDs bb392ec0-... and c06c8400-...) because it ships a better software " +
-            "canceler; MeshLive has none, so it keeps them (BACKLOG conflict K2)",
+            "canceler; Nearby has none, so it keeps them (BACKLOG conflict K2)",
     )
     private val SHARING_INPUT = PolicySource(
         PolicySourceKind.PLATFORM_DOC,
@@ -190,7 +190,7 @@ internal object AudioPolicyEntries {
             behaviour = "Before enabling AEC, NS and AGC the app reads each effect's default enabled state, descriptor UUID, " +
                 "implementor and control ownership and logs them with the setEnabled status in BENCHMARK audio_capture " +
                 "(effectState=). No effect is switched off and the AOSP software AEC stays enabled; WebRTC's skip rule " +
-                "is not adopted because MeshLive has no software echo canceller of its own (user question Q-N4).",
+                "is not adopted because Nearby has no software echo canceller of its own (user question Q-N4).",
             sources = listOf(AEC_API, PRE_PROCESSING, CDD_AEC, WEBRTC_EFFECTS),
             sourceStatus = PolicySourceStatus.OFFICIAL,
             evidence = listOf(NO_RUN),

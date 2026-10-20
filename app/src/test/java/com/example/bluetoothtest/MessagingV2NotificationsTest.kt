@@ -13,7 +13,7 @@ import org.junit.Test
 class MessagingV2NotificationsTest {
     private val text = XmlThreadText
     private val rules = ConversationNotificationRules
-    private val app = "MeshLive"
+    private val app = "Nearby"
     private val peerHex = "ab".repeat(16)
     private val selfHex = "cd".repeat(16)
     private val self = NodeId.fromBytes(hexToBytes(selfHex))

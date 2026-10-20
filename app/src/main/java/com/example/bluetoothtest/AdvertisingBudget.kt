@@ -266,12 +266,12 @@ internal class AdvertisingBudget(
     data class Verdict(val tooMany: Boolean, val ceiling: Int?, val stuck: Boolean, val suspectedA15Leak: Boolean)
 
     /**
-     * Other apps or a leaked stack hold every advertising instance: refusals kept coming while MeshLive owned no
+     * Other apps or a leaked stack hold every advertising instance: refusals kept coming while Nearby owned no
      * set. [message] is plain language for the user; `Turn Bluetooth off and on` is the documented remedy.
      */
     data class StuckReport(val refusals: Int, val firstAtMs: Long, val suspectedA15Leak: Boolean) {
         val message: String
-            get() = "Bluetooth has no free advertising slots, although MeshLive is using none. Other apps or the phone's " +
+            get() = "Bluetooth has no free advertising slots, although Nearby is using none. Other apps or the phone's " +
                 "Bluetooth are holding them" + (if (suspectedA15Leak) " (a known Android 15 fault)" else "") +
                 ". Turn Bluetooth off and on; if it persists, restart the phone."
     }
@@ -357,7 +357,7 @@ internal object AdvertisingPayload {
     /** Bytes of a manufacturer-specific AD structure with [payloadBytes] after the company identifier. */
     fun manufacturer(payloadBytes: Int): Int = field(MANUFACTURER_ID_BYTES + payloadBytes)
 
-    /** One complete 128-bit service UUID list entry (the MeshLive service UUID is not a 16-bit-base UUID). */
+    /** One complete 128-bit service UUID list entry (the Nearby service UUID is not a 16-bit-base UUID). */
     val SERVICE_UUID_128: Int = field(16)
 
     private val BLUETOOTH_BASE_LSB: Long = java.util.UUID.fromString("00000000-0000-1000-8000-00805f9b34fb").leastSignificantBits

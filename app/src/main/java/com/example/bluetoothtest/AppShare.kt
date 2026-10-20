@@ -92,7 +92,8 @@ internal object AppSharePolicy {
     const val COPY_TTL_MS = 30 * 60 * 1000L
     const val FILE_PREFIX = "BluetoothVideo"
 
-    /** Must equal docs/USER_GUIDE.md "Verifying a release" (AppSharePolicyTest checks it). */
+    /** Must equal docs/USER_GUIDE.md "Verifying a release" (AppSharePolicyTest checks it).
+     *  Still the upstream MeshLive published key until Nearby cuts a release with its own cert. */
     const val PUBLISHED_RELEASE_CERT_SHA256 =
         "2E:EF:C0:5A:44:45:22:52:9D:9F:75:D7:EB:CE:FD:08:86:47:07:F2:1A:79:04:1D:B5:1E:BF:F8:36:49:E2:13"
 
