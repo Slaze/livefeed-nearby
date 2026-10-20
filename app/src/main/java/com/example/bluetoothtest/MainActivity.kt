@@ -616,6 +616,9 @@ class MainActivity : AppCompatActivity() {
     private var receiverBrowserStartedAtNs = 0L
     private var receiverFirstOfferLogged = false
     private var receiverJoinStartedAtNs = 0L
+    private var receiverJoinPending = false
+    private var receiverJoinLastStatus: String? = null
+    private var receiverConnectingTick: Runnable? = null
     private var receiverFirstSurfaceForJoinPending = false
     private var receiverPlaybackPaused = false
     private val receiverRecoveryNoticePolicy = ReceiverRecoveryNoticePolicy(
@@ -1042,8 +1045,12 @@ class MainActivity : AppCompatActivity() {
                 AppScreen.CAMERA -> showReceiverBrowser()
                 // The Live tab is the root: back leaves the app as it did from Home.
                 AppScreen.RECEIVER_BROWSER -> {
-                    isEnabled = false
-                    onBackPressedDispatcher.onBackPressed()
+                    if (receiverJoinPending) {
+                        showReceiverBrowser()
+                    } else {
+                        isEnabled = false
+                        onBackPressedDispatcher.onBackPressed()
+                    }
                 }
                 AppScreen.PLAYBACK -> showReceiverBrowser()
                 AppScreen.CALL_BROWSER -> showReceiverBrowser()
@@ -1878,7 +1885,7 @@ class MainActivity : AppCompatActivity() {
         preview.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
                 applyVideoSurfaceTransform()
-                if (appScreen == AppScreen.PLAYBACK && receiver == null) {
+                if (isJoinScreenArmed() && receiver == null) {
                     if (reconnectTarget != null) refreshNearbyStreams() else startReceiving()
                 } else {
                     startIdleCameraPreview()
@@ -3480,6 +3487,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showStreamScreen() {
+        if (receiverJoinPending || receiver != null) {
+            stopStreaming("Stopped receiving.")
+            clearReceiverJoinPending()
+        }
         stopPrivateCallEndpoint()
         stopNearbyStreamDiscovery()
         sessionRole = SessionRole.SEND
@@ -3487,6 +3498,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showStreamCamera() {
+        clearReceiverJoinPending()
+        restoreJoinPreviewSize()
         appScreen = AppScreen.CAMERA
         receiverBrowserScreen.visibility = View.GONE
         callBrowserScreen.visibility = View.GONE
@@ -3531,6 +3544,8 @@ class MainActivity : AppCompatActivity() {
             clearReceiverBrowserNotice()
         }
         selectedStreamPeer = null
+        clearReceiverJoinPending()
+        viewerFrameAge?.stop()
         stopStreamPresence()
         stopIdleCameraPreview()
         // Reachable while browsing (ReachableWhileBrowsingFeature): scanning needs no advertising set,
@@ -3578,7 +3593,8 @@ class MainActivity : AppCompatActivity() {
         updateMainNav()
     }
 
-    private fun showPlaybackScreen() {
+    private fun showPlaybackScreen(connecting: Boolean = true) {
+        restoreJoinPreviewSize()
         appScreen = AppScreen.PLAYBACK
         receiverBrowserScreen.visibility = View.GONE
         callBrowserScreen.visibility = View.GONE
@@ -3597,9 +3613,14 @@ class MainActivity : AppCompatActivity() {
         videoBackButton.visibility = View.VISIBLE
         videoBackButton.contentDescription = "Back to nearby broadcasts"
         viewerFrameAgeController().startViewing(FeatureCatalog.isEnabled(ViewerFeatures.frameAge.id))
-        showReceiverOverlay("Connecting to stream", showProgress = true)
+        if (connecting) {
+            showReceiverOverlay(connectingCopy(), showProgress = true)
+        } else {
+            hideReceiverOverlay()
+        }
         settingsBackCallback.isEnabled = true
         updateSystemBars(visible = false)
+        updateMainNav()
     }
 
     private fun showDebugLaunchScreen() {
@@ -3649,6 +3670,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun showSettings(show: Boolean) {
         if (show) {
+            if (receiverJoinPending) {
+                if (receiver != null) stopStreaming("Stopped receiving.")
+                clearReceiverJoinPending()
+            }
             settingsReturnScreen = appScreen
             appScreen = AppScreen.SETTINGS
             settingsReturnCalls = callsTabScreen.visibility == View.VISIBLE
@@ -6847,18 +6872,18 @@ class MainActivity : AppCompatActivity() {
             }
         nearbyStreamPeers = updatedPeers
         if (listChanged) updateNearbyStreamList()
+        if (receiverJoinPending) {
+            receiverBrowserStatus.text = connectingCopy()
+            return
+        }
         val activeNotice = receiverBrowserNotice?.takeIf {
             SystemClock.elapsedRealtime() <= receiverBrowserNoticeDeadlineMs
         }
         receiverBrowserStatus.text = activeNotice ?: if (nearbyStreamPeers.isEmpty()) {
-            val coolingRetryMs = nearbyStreamsLastSeen.values.asSequence()
-                .mapNotNull { (peer, _) ->
-                    suppressedStreamRoutes.entries
-                        .filter { (route, _) -> route.matches(peer.announcement) }
-                        .minOfOrNull { (_, deadlineMs) -> deadlineMs - nowMs }
-                }
-                .minOrNull()
-            receiverBrowserEmptyStatus(coolingRetryMs, DebugTunables.receiverUiStability)
+            receiverBrowserEmptyStatus(
+                receiverBrowserCoolingRetryMs(nowMs, suppressedStreamRoutes.values),
+                DebugTunables.receiverUiStability,
+            )
         } else {
             "" // the list shows them; no count line
         }
@@ -7019,6 +7044,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showPrivateCallBrowser(restartDelayMs: Long = 0L) {
         stopStreaming("Stopped.")
+        clearReceiverJoinPending()
         stopNearbyStreamDiscovery()
         stopIdleCameraPreview()
         appScreen = AppScreen.CALL_BROWSER
@@ -9749,6 +9775,7 @@ class MainActivity : AppCompatActivity() {
             stopPrivateCallEndpoint()
         }
         receiverJoinStartedAtNs = System.nanoTime()
+        receiverJoinLastStatus = "Requesting ${peer.label}…"
         if (!preservingPlayback) {
             finishReceiverContinuity()
             receiverContinuityTracker = null
@@ -9765,9 +9792,12 @@ class MainActivity : AppCompatActivity() {
         if (preservingPlayback) {
             showReceiverOverlay("Reconnecting to stream", showProgress = true)
             updateConnectionDot(0)
-        } else {
+        } else if (ReceiverJoinUi.revealPlaybackOnTap(DebugTunables.receiverUiStability, reconnectingWhilePlaying = false)) {
             showPlaybackScreen()
+        } else {
+            armHiddenJoinPreview()
         }
+        startReceiverConnectingTick()
         audioLive.onJoin(peer.announcement, audioListenTitle(peer)) // AUDIO-LIVE hook
         setStatus("Requesting ${peer.label}…")
         if (hasRequiredPermissions()) {
@@ -9956,6 +9986,91 @@ class MainActivity : AppCompatActivity() {
             Log.i("BluetoothVideo", "Receiver overlay: hidden | text=${receiverWaitingText.text}")
         }
         receiverWaitingOverlay.visibility = View.GONE
+    }
+
+    private fun isJoinScreenArmed(): Boolean =
+        receiverJoinScreenArmed(
+            appScreen == AppScreen.PLAYBACK,
+            receiverJoinPending && appScreen == AppScreen.RECEIVER_BROWSER,
+        )
+
+    private fun connectingElapsedMs(): Long =
+        if (receiverJoinStartedAtNs <= 0L) 0L else (System.nanoTime() - receiverJoinStartedAtNs) / 1_000_000L
+
+    private fun connectingCopy(): String =
+        ReceiverJoinUi.connectingCopy(DebugTunables.receiverUiStability, connectingElapsedMs(), receiverJoinLastStatus)
+
+    private fun applyConnectingCopy() {
+        val copy = connectingCopy()
+        if (receiverJoinPending && appScreen == AppScreen.RECEIVER_BROWSER && ::receiverBrowserStatus.isInitialized) {
+            receiverBrowserStatus.text = copy
+        } else if (appScreen == AppScreen.PLAYBACK && !receiverWasActive) {
+            showReceiverOverlay(copy, showProgress = true)
+        }
+    }
+
+    private fun startReceiverConnectingTick() {
+        stopReceiverConnectingTick()
+        val tick = object : Runnable {
+            override fun run() {
+                if (!(receiverJoinPending || (appScreen == AppScreen.PLAYBACK && !receiverWasActive))) return
+                applyConnectingCopy()
+                sessionHandler.postDelayed(this, ReceiverJoinUi.CONNECTING_TICK_MS)
+            }
+        }
+        receiverConnectingTick = tick
+        applyConnectingCopy()
+        sessionHandler.postDelayed(tick, ReceiverJoinUi.CONNECTING_TICK_MS)
+    }
+
+    private fun stopReceiverConnectingTick() {
+        receiverConnectingTick?.let(sessionHandler::removeCallbacks)
+        receiverConnectingTick = null
+    }
+
+    private fun clearReceiverJoinPending() {
+        val wasPending = receiverJoinPending
+        receiverJoinPending = false
+        receiverJoinLastStatus = null
+        stopReceiverConnectingTick()
+        if (wasPending) restoreJoinPreviewSize()
+    }
+
+    private fun restoreJoinPreviewSize() {
+        if (!::preview.isInitialized) return
+        val params = preview.layoutParams ?: return
+        if (params.width != ViewGroup.LayoutParams.MATCH_PARENT ||
+            params.height != ViewGroup.LayoutParams.MATCH_PARENT
+        ) {
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT
+            preview.layoutParams = params
+        }
+        applyVideoSurfaceTransform()
+    }
+
+    /** TextureView punches through siblings, so keep a 1×1 hole under the opaque Live browser. */
+    private fun armHiddenJoinPreview() {
+        receiverJoinPending = true
+        sessionRole = SessionRole.RECEIVE
+        cameraScreen.visibility = View.VISIBLE
+        cameraViewfinder.visibility = View.GONE
+        preview.visibility = View.VISIBLE
+        val params = preview.layoutParams
+        params.width = 1
+        params.height = 1
+        preview.layoutParams = params
+        hideReceiverOverlay()
+        receiverBrowserScreen.visibility = View.VISIBLE
+        settingsBackCallback.isEnabled = true
+        Log.i("BluetoothVideo", "Receiver join UI: pending on browser until active")
+    }
+
+    private fun revealPlaybackAfterJoin() {
+        receiverJoinPending = false
+        stopReceiverConnectingTick()
+        Log.i("BluetoothVideo", "Receiver join UI: Watch revealed after first media")
+        showPlaybackScreen(connecting = false)
     }
 
     private fun resetReceiverRecoveryNotice() {
@@ -11024,7 +11139,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startReceiving() {
-        if (appScreen != AppScreen.PLAYBACK || receiver != null || !receiverStartAllowed(
+        if (!isJoinScreenArmed() || receiver != null || !receiverStartAllowed(
                 selectedStreamPeer != null,
                 reconnectTarget != null,
                 debugLaunchRequested && !debugAutoSelectStream,
@@ -11080,22 +11195,30 @@ class MainActivity : AppCompatActivity() {
             },
             { message ->
                 runOnUiThread {
-                    if (receiver === newReceiver) setStatus(message)
+                    if (receiver === newReceiver) {
+                        receiverJoinLastStatus = message
+                        setStatus(message)
+                        if (receiverJoinPending || (appScreen == AppScreen.PLAYBACK && !receiverWasActive)) {
+                            applyConnectingCopy()
+                        }
+                    }
                 }
             },
             { active ->
                 runOnUiThread {
-                    if (receiver === newReceiver && appScreen == AppScreen.PLAYBACK) {
-                        audioLive.onListenActive(active) // AUDIO-LIVE hook
-                        if (active) {
-                            receiverWasActive = true
-                            consecutiveRouteFailures.clear()
-                            reconnectFromNodeIdPrefix = null
-                            preferredRecoveryParent = null
-                            preserveReceiverContinuityOnNextFormat = false
-                        }
-                        updateConnectionDot(if (active) 1 else 0)
+                    if (receiver !== newReceiver || !isJoinScreenArmed()) return@runOnUiThread
+                    if (active && receiverJoinPending) revealPlaybackAfterJoin()
+                    if (appScreen != AppScreen.PLAYBACK) return@runOnUiThread
+                    audioLive.onListenActive(active) // AUDIO-LIVE hook
+                    if (active) {
+                        receiverWasActive = true
+                        consecutiveRouteFailures.clear()
+                        reconnectFromNodeIdPrefix = null
+                        preferredRecoveryParent = null
+                        preserveReceiverContinuityOnNextFormat = false
+                        stopReceiverConnectingTick()
                     }
+                    updateConnectionDot(if (active) 1 else 0)
                 }
             },
             { state ->
@@ -11487,6 +11610,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun stopStreaming(message: String) {
+        stopReceiverConnectingTick()
         val impairment = debugBroadcastImpairment
         impairment?.cancel()
         debugBroadcastImpairment = null

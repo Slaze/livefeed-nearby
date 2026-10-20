@@ -1785,6 +1785,7 @@ class CameraVideoEncoder(
         Log.i("BluetoothVideo", "BENCHMARK encoder_capabilities v1 $line")
         runCatching {
             val video = encoder.codecInfo.getCapabilitiesForType(videoCodec.mimeType).videoCapabilities
+                ?: return@runCatching
             Log.i(
                 "BluetoothVideo",
                 EncoderAlignment.line(

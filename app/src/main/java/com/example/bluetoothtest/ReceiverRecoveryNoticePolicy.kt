@@ -112,8 +112,69 @@ internal fun receiverBrowserEmptyStatus(coolingRetryMs: Long?, stable: Boolean =
     return "A stream is in range. Trying it again in about $seconds s."
 }
 
+/**
+ * Remaining cooldown for the empty Live list. A failed join removes that route from last-seen so
+ * it is not retried until a fresh advertisement, which used to make [receiverBrowserEmptyStatus]
+ * see no cooling stream and say "No nearby streams yet" for up to 8 s although suppression was
+ * active. The suppression deadlines are the source of truth.
+ */
+internal fun receiverBrowserCoolingRetryMs(
+    nowMs: Long,
+    suppressionDeadlinesMs: Iterable<Long>,
+): Long? = suppressionDeadlinesMs.minOfOrNull { it - nowMs }?.takeIf { it >= 0L }
+
 internal fun receiverStartAllowed(
     hasSelectedStreamRoute: Boolean,
     isFindingRoute: Boolean,
     isDirectDebugReceiver: Boolean,
 ): Boolean = !isFindingRoute && (hasSelectedStreamRoute || isDirectDebugReceiver)
+
+/**
+ * Whether [AndroidVideoReceiver] may start on this screen. Watch ([playback]) is the usual place;
+ * a fresh join with UI stability on keeps the Live browser visible and attaches a 1×1 TextureView
+ * underneath so the surface exists without revealing Watch (PLAN: failed join showed Watch 0.25-0.4 s).
+ */
+internal fun receiverJoinScreenArmed(playback: Boolean, joinPendingOnBrowser: Boolean): Boolean =
+    playback || joinPendingOnBrowser
+
+/**
+ * When to reveal Watch during a join, and the connecting copy.
+ *
+ * With [DebugTunables.receiverUiStability] on, a tap stays on the Live browser until the receiver
+ * reports media flowing ([onStreamActive]). Revealing Watch on tap needed the TextureView, but a
+ * join that then failed still showed Watch for 0.25-0.4 s (DECISIONS 2026-10-11). The TextureView
+ * is kept at 1×1 px under the opaque browser so receiving can start without a visible Watch flash.
+ *
+ * Connecting copy: after 2 s the overlay (or the browser line) names the elapsed wait, so a 15 s
+ * GATT accept timeout is not a frozen "Connecting to stream" spinner. Control arm (stability off):
+ * Watch is shown on tap and the overlay stays the old static line.
+ */
+internal object ReceiverJoinUi {
+    const val CONNECTING_PROGRESS_AFTER_MS = 2_000L
+    const val CONNECTING_TICK_MS = 1_000L
+    const val CONNECTING = "Connecting to stream"
+
+    fun revealPlaybackOnTap(stable: Boolean, reconnectingWhilePlaying: Boolean): Boolean =
+        !stable || reconnectingWhilePlaying
+
+    fun attachHiddenPreview(stable: Boolean, reconnectingWhilePlaying: Boolean): Boolean =
+        stable && !reconnectingWhilePlaying
+
+    fun connectingCopy(stable: Boolean, elapsedMs: Long, lastStatus: String?): String {
+        if (!stable) return CONNECTING
+        val elapsed = elapsedMs.coerceAtLeast(0L)
+        val seconds = elapsed / 1_000L
+        val detail = lastStatus?.trim()?.takeIf(::isUserFacingJoinStatus)
+        return when {
+            elapsed < CONNECTING_PROGRESS_AFTER_MS -> detail ?: CONNECTING
+            detail != null -> "$detail · ${seconds}s"
+            else -> "Still connecting · ${seconds}s. Waiting for the other phone."
+        }
+    }
+
+    private fun isUserFacingJoinStatus(message: String): Boolean {
+        if (message.startsWith("BENCHMARK") || message.contains("BENCHMARK ")) return false
+        if (message.contains("event=") || message.contains(" | ")) return false
+        return true
+    }
+}

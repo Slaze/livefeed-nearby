@@ -153,4 +153,75 @@ class ReceiverUiStabilityTest {
             receiverBrowserEmptyStatus(coolingRetryMs = 7_100L, stable = false),
         )
     }
+
+    @Test
+    fun aFailedJoinStillNamesTheCoolingStreamAfterLastSeenIsCleared() {
+        // returnToStreamBrowser removes the failed route from last-seen so it is not retried
+        // from cache; the 8 s suppression must still drive the empty-list line.
+        val nowMs = 10_000L
+        val retryMs = receiverBrowserCoolingRetryMs(nowMs, listOf(nowMs + 8_000L))
+        assertEquals(8_000L, retryMs)
+        assertEquals(
+            "A stream is in range. Trying it again in about 8 s.",
+            receiverBrowserEmptyStatus(retryMs),
+        )
+        assertEquals(1_000L, receiverBrowserCoolingRetryMs(nowMs, listOf(nowMs + 8_000L, nowMs + 1_000L)))
+        assertEquals(null, receiverBrowserCoolingRetryMs(nowMs, emptyList()))
+        assertEquals(null, receiverBrowserCoolingRetryMs(nowMs, listOf(nowMs - 1L)))
+    }
+
+    @Test
+    fun aFreshJoinWithStabilityOnDoesNotRevealWatchUntilMediaFlows() {
+        // A failed join used to show Watch for 0.25-0.4 s because connectToStream opened
+        // playback before the hop existed. Stability keeps the browser until onStreamActive.
+        assertFalse(ReceiverJoinUi.revealPlaybackOnTap(stable = true, reconnectingWhilePlaying = false))
+        assertTrue(ReceiverJoinUi.attachHiddenPreview(stable = true, reconnectingWhilePlaying = false))
+        assertTrue(receiverJoinScreenArmed(playback = false, joinPendingOnBrowser = true))
+        assertFalse(receiverJoinScreenArmed(playback = false, joinPendingOnBrowser = false))
+    }
+
+    @Test
+    fun reconnectingWhileAlreadyWatchingStaysOnPlayback() {
+        assertTrue(ReceiverJoinUi.revealPlaybackOnTap(stable = true, reconnectingWhilePlaying = true))
+        assertFalse(ReceiverJoinUi.attachHiddenPreview(stable = true, reconnectingWhilePlaying = true))
+        assertTrue(receiverJoinScreenArmed(playback = true, joinPendingOnBrowser = false))
+    }
+
+    @Test
+    fun theControlArmStillOpensWatchOnTap() {
+        assertTrue(ReceiverJoinUi.revealPlaybackOnTap(stable = false, reconnectingWhilePlaying = false))
+        assertFalse(ReceiverJoinUi.attachHiddenPreview(stable = false, reconnectingWhilePlaying = false))
+        assertEquals(
+            ReceiverJoinUi.CONNECTING,
+            ReceiverJoinUi.connectingCopy(stable = false, elapsedMs = 8_000L, lastStatus = "Requesting stream…"),
+        )
+    }
+
+    @Test
+    fun connectingCopyNamesTheWaitAfterTwoSeconds() {
+        assertEquals(
+            ReceiverJoinUi.CONNECTING,
+            ReceiverJoinUi.connectingCopy(stable = true, elapsedMs = 0L, lastStatus = null),
+        )
+        assertEquals(
+            ReceiverJoinUi.CONNECTING,
+            ReceiverJoinUi.connectingCopy(stable = true, elapsedMs = 1_999L, lastStatus = null),
+        )
+        assertEquals(
+            "Still connecting · 2s. Waiting for the other phone.",
+            ReceiverJoinUi.connectingCopy(stable = true, elapsedMs = 2_000L, lastStatus = null),
+        )
+        assertEquals(
+            "Requesting North Wind… · 5s",
+            ReceiverJoinUi.connectingCopy(stable = true, elapsedMs = 5_400L, lastStatus = "Requesting North Wind…"),
+        )
+        assertEquals(
+            "Still connecting · 15s. Waiting for the other phone.",
+            ReceiverJoinUi.connectingCopy(
+                stable = true,
+                elapsedMs = 15_000L,
+                lastStatus = "BENCHMARK le_link_policy event=join",
+            ),
+        )
+    }
 }

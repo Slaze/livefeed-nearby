@@ -642,11 +642,13 @@ object DebugTunables {
         }
 
     /**
-     * Viewer UI stability (ReceiverRecoveryNoticePolicy, receiverBrowserEmptyStatus): a repeating
-     * "Recovering video" cover is held through gaps under 1 s instead of flashing off and on, and the
-     * browser says when the only nearby stream is cooling down after a failed connection instead of
-     * "No nearby streams yet". DEBUG launch extra `test_receiver_ui_stability=false` is the control arm
-     * (cover follows the decoder flag one to one; the old browser line).
+     * Viewer UI stability (ReceiverRecoveryNoticePolicy, receiverBrowserEmptyStatus, ReceiverJoinUi):
+     * a repeating "Recovering video" cover is held through gaps under 1 s instead of flashing off and
+     * on, the browser says when the only nearby stream is cooling down after a failed connection
+     * instead of "No nearby streams yet", a fresh join stays on the Live list until media flows
+     * (Watch is not shown for a failed join), and the connecting line names the elapsed wait after
+     * 2 s. DEBUG launch extra `test_receiver_ui_stability=false` is the control arm (cover follows
+     * the decoder flag one to one; the old browser line; Watch opens on tap).
      */
     @Volatile var receiverUiStability: Boolean = true
         set(value) {

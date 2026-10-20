@@ -2,7 +2,7 @@
 
 For developers and curious readers: how MeshLive is put together (modules, radio links, sender and receiver pipelines, relay chains, calls, identity at a high level, distribution) and a summary of the experimental switches. Wire formats and security rules are in [PROTOCOL.md](PROTOCOL.md); testing is in [TESTING.md](TESTING.md); unfinished work is in [PLAN.md](PLAN.md).
 
-Some words used throughout:Some words used throughout:
+Some words used throughout:
 
 | Word | Meaning |
 | --- | --- |
