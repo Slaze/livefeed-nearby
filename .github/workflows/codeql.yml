@@ -1,10 +1,16 @@
 # CodeQL code scanning.
 #
-# Java/Kotlin runs with `build-mode: none`: CodeQL reads the sources without compiling them. A full build
-# of this project needs the Android SDK, NDK 28.2.13676358, CMake, Perl and two downloaded native source
-# trees (libaom, libopus), which is too heavy and fragile for a free CI runner, and the scan only needs the
-# Kotlin/Java app code. Consequence: the C/C++ native code (libaom/libopus bridge) is NOT analysed, and
-# `none` mode has less precise data flow than a built analysis. Python (host tools) is scanned too.
+# Java/Kotlin runs with `build-mode: manual`. CodeQL's `none` mode extracts Java sources only: this app is
+# all Kotlin, so `none` found nothing to analyse and every java-kotlin run failed. The Kotlin extractor
+# needs the Kotlin compiler to run, so the job compiles the Kotlin/JVM code with Gradle and nothing else:
+# main code of both flavours (`github` debug, `fdroid` release, which also covers the debug/release source
+# sets), unit tests and instrumented tests. No APK is assembled and no CMake/NDK task runs, so the native
+# toolchain and the downloaded libaom/libopus sources are not needed. The build uses JDK 21 from the runner
+# image and the Android SDK preinstalled on it, and keeps the Gradle wrapper checksum, dependency
+# verification and lockfiles in force. The Kotlin compiler runs in-process and without the Gradle daemon or
+# build cache so the CodeQL tracer sees every compilation.
+# Consequence: the C/C++ native code (libaom/libopus bridge) is NOT analysed. Python (host tools) is
+# scanned with `none` mode.
 # If a repository-level "default setup" for code scanning is ever enabled, disable it first: the two
 # configurations conflict.
 name: CodeQL
@@ -24,6 +30,7 @@ jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     permissions:
       security-events: write  # upload results
       contents: read
@@ -33,7 +40,7 @@ jobs:
       matrix:
         include:
           - language: java-kotlin
-            build-mode: none
+            build-mode: manual
           - language: python
             build-mode: none
     steps:
@@ -47,6 +54,16 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
+
+      - name: Compile the Kotlin code (no native build)
+        if: matrix.build-mode == 'manual'
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          ./gradlew --no-daemon --no-build-cache --no-configuration-cache --stacktrace \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            :app:compileGithubDebugUnitTestKotlin \
+            :app:compileGithubDebugAndroidTestKotlin \
+            :app:compileFdroidReleaseKotlin
 
       - name: Analyze
         uses: github/codeql-action/analyze@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
